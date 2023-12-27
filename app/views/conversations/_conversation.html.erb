@@ -1,22 +1,12 @@
-<div id="<%= dom_id conversation %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">User:</strong>
-    <%= conversation.user_id %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Title:</strong>
-    <%= conversation.title %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Description:</strong>
-    <%= conversation.description %>
-  </p>
-
-  <% if action_name != "show" %>
-    <%= link_to "Show this conversation", conversation, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Edit this conversation", edit_conversation_path(conversation), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-    <hr class="mt-6">
-  <% end %>
-</div>
+<section class="relative">
+  <div class="w-full lg:w-2/3 lg:mx-auto lg:px-4 flex flex-col gap-8 mb-56">
+    <%= turbo_frame_tag "interactions_#{conversation.id}" do %>
+      <% conversation.interactions.each do |interaction|%>
+        <%= render "interactions/interaction", interaction: interaction %>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="container mx-auto flex pb-8 bg-gray-800 fixed bottom-0">
+    <%= render "form", conversation: @conversation %>
+  </div>
+</section>
