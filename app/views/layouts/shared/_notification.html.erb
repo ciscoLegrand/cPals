@@ -1,0 +1,6 @@
+<div id="notification" class="flex flex-col items-end justify-center z-50">
+  <% flash.each do |type, data| %>
+    <%= render(UI::Notification.new(type: type, data: data)) %>
+  <% end %>
+  <%#= render UI::Notification.new(type: 'success', data: { title: 'Hola Mundo', body: 'Este es el mensaje' })%>
+</div>
