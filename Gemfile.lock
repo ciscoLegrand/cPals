@@ -101,12 +101,18 @@ GEM
     faraday-net_http (3.0.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     importmap-rails (1.2.3)
       actionpack (>= 6.0.0)
       activesupport (>= 6.0.0)
       railties (>= 6.0.0)
+    inline_svg (1.9.0)
+      activesupport (>= 3.0)
+      nokogiri (>= 1.6)
     io-console (0.7.1)
     irb (1.11.0)
       rdoc
@@ -120,9 +126,11 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.2)
+    method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.20.0)
     msgpack (1.7.2)
+    multi_xml (0.6.0)
     multipart-post (2.3.0)
     mutex_m (0.2.0)
     net-imap (0.4.9)
@@ -188,6 +196,7 @@ GEM
     rake (13.1.0)
     rdoc (6.6.2)
       psych (>= 4.0.0)
+    redcarpet (3.6.0)
     redis (5.0.8)
       redis-client (>= 0.17.0)
     redis-client (0.19.1)
@@ -212,6 +221,10 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    view_component (3.8.0)
+      activesupport (>= 5.2.0, < 8.0)
+      concurrent-ruby (~> 1.0)
+      method_source (~> 1.0)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -229,17 +242,22 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   debug
+  httparty
   importmap-rails
+  inline_svg
+  nokogiri
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)
   rails (~> 7.1.2)
+  redcarpet
   redis (>= 4.0.1)
   ruby-openai
   stimulus-rails
   tailwindcss-rails
   turbo-rails
   tzinfo-data
+  view_component
   web-console
 
 RUBY VERSION
