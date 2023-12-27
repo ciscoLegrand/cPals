@@ -21,19 +21,19 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_25_203235) do
     t.integer "user_id"
     t.string "ip_address"
     t.string "title"
+    t.string "model"
+    t.jsonb "prompt_settings"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "interactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "conversation_id", null: false
-    t.string "question_text"
-    t.text "answer_text"
-    t.jsonb "response_metadata"
-    t.string "model_used"
-    t.jsonb "prompt_settings"
-    t.jsonb "api_request_details"
-    t.jsonb "api_response_details"
+    t.integer "role", default: 0
+    t.string "content"
+    t.string "model"
+    t.jsonb "usage"
+    t.string "system_fingerprint"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["conversation_id"], name: "index_interactions_on_conversation_id"
