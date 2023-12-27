@@ -8,12 +8,52 @@
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+
+
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
+  <body class="bg-gray-800">
+    <%= render 'layouts/shared/notification' %>
+    <div class="relative z-0 flex h-full w-full overflow-hidden">
+      <aside class="hidden md:w-1/6 h-screen flex-shrink-1 overflow-x-hidden bg-black md:flex flex-col justify-between relative">
+        <nav class="hidden md:w-1/6 md:flex flex-col gap-3 overflow-y-auto-scroll h-screen fixed bg-black">
+          <%= link_to 'cPal', root_path, class: 'w-full px-4 py-2 text-white text-center text-xl font-semibold' %>
+          <hr class="border-b border-b-gray-700">
+          <h2 class="w-full text-sm font-medium text-gray-500 px-4"><%= t('.today') %></h2>
+          <div id="aside_conversations">
+            <%= turbo_frame_tag "conversations_today", src: conversations_path(range: 'today'), load: :lazy do %>
+              <span class="w-full px-4 text-gray-600 text-sm">cargando ...</span>
+            <% end %>
+          </div>
+
+          <h2 class="w-full text-sm font-medium text-gray-500 px-4"><%= t('.yesterday') %></h2>
+          <%= turbo_frame_tag "conversations_yesterday", src: conversations_path(range: 'yesterday'), load: :lazy do %>
+            <span class="w-full px-4 text-gray-600 text-sm">cargando ...</span>
+          <% end %>
+
+          <h2 class="w-full text-sm font-medium text-gray-500 px-4"><%= t('.last_7_days') %></h2>
+          <%= turbo_frame_tag "conversations_last_7_days", src: conversations_path(range: 'last_7_days'), load: :lazy do %>
+            <span class="w-full px-4 text-gray-600 text-sm">cargando ...</span>
+          <% end %>
+
+          <h2 class="w-full text-sm font-medium text-gray-500 px-4"><%= t('.last_30_days') %></h2>
+          <%= turbo_frame_tag "conversations_last_30_days", src: conversations_path(range: 'last_30_days'), load: :lazy do %>
+            <span class="w-full px-4 text-gray-600 text-sm">cargando ...</span>
+          <% end %>
+        </nav>
+
+        <%= render UI::UserCard.new(user: nil, style: {
+                container: 'w-1/6 fixed bottom-4 left-0 rounded-xl flex justify-start items-center px-4',
+                dropdown: 'w-full bottom-20 left-0 z-40 shadow-lg shadow-slate-700 rounded-lg bg-slate-900 text-gray-200',
+              }) %>
+      </aside>
+      <main class="w-5/6 relative flex min-h-screen flex-1 flex-col items-center overflow-hidden" data-controller="dropdown">
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>
