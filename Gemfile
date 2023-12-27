@@ -60,4 +60,11 @@ group :development do
   # gem "spring"
 end
 
+
+
+gem 'nokogiri'
+gem 'httparty'
 gem 'ruby-openai'
+gem 'view_component'
+gem 'inline_svg'
+gem 'redcarpet'
