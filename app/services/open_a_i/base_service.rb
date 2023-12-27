@@ -13,11 +13,14 @@ module OpenAI
 
     DEFAULT_MODEL = 'gpt-3.5-turbo'
     DEFAULT_MAX_TOKENS = 750
+    DEFAULT_TEMPERATURE = 0.8
+    RESPONSES_PER_MESSAGE = 1
 
-    attr_reader :client, :model, :max_tokens, :options
+    attr_reader :client, :conversation, :model, :max_tokens, :temperature, :options
 
-    def initialize(model: DEFAULT_MODEL, max_tokens: DEFAULT_MAX_TOKENS, **options)
-      @model = model
+    def initialize(max_tokens: DEFAULT_MAX_TOKENS, **options)
+      @conversation = options[:conversation]
+      @model = @conversation&.model.presence || DEFAULT_MODEL
       @max_tokens = max_tokens
       @client = setup_client(options)
     end

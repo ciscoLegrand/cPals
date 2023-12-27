@@ -1,5 +1,34 @@
 class Interaction < ApplicationRecord
+  include ActionView::RecordIdentifier
+
+  enum role: { system: 0, assistant: 1, user: 2 }
+
   belongs_to :conversation
+
+  # after_create_commit -> { broadcast_created }
+  # after_update_commit -> { broadcast_updated }
+
+  # def broadcast_created
+  #   broadcast_append_later_to(
+  #     "#{dom_id(conversation)}_interactions",
+  #     partial: "interactions/interaction",
+  #     locals: { message: self, scroll_to: true },
+  #     target: "#{dom_id(conversation)}_interactions"
+  #   )
+  # end
+
+  # def broadcast_updated
+  #   broadcast_append_to(
+  #     "#{dom_id(conversation)}_interactions",
+  #     partial: "interactions/interaction",
+  #     locals: { message: self, scroll_to: true },
+  #     target: "#{dom_id(conversation)}_interactions"
+  #   )
+  # end
+
+  def self.for_openai(messages)
+    messages.map { |message| { role: message.role, content: message.content } }
+  end
 
   # Define la clase de renderizado personalizado dentro de Interaction
   class CustomRender < Redcarpet::Render::HTML
@@ -17,9 +46,10 @@ class Interaction < ApplicationRecord
     end
   end
 
+
   def answer_text_to_html(view_context)
     renderer = CustomRender.new(view_context, hard_wrap: true, filter_html: true)
     markdown = Redcarpet::Markdown.new(renderer, fenced_code_blocks: true, no_intra_emphasis: true, autolink: true, tables: true, lax_spacing: true)
-    markdown.render(answer_text).html_safe
+    markdown.render(content).html_safe
   end
 end

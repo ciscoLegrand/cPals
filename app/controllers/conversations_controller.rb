@@ -25,13 +25,13 @@ class ConversationsController < ApplicationController
 
   # POST /conversations
   def create
-    @conversation = Conversation.new(conversation_params.except(:description, :model))
+    @conversation = Conversation.new(conversation_params.except(:description))
 
     respond_to do |format|
       ActiveRecord::Base.transaction do
         generate_and_set_title
         @conversation.save!
-        create_initial_interaction
+        interact_with_chat_service
       end
 
       flash.now[:success] = { title: "¡Conversación creada!", body: "¡Tu conversación ha sido creada exitosamente! Ahora puedes verla en la lista de conversaciones." }
@@ -48,8 +48,7 @@ class ConversationsController < ApplicationController
   def update
     respond_to do |format|
       ActiveRecord::Base.transaction do
-        @conversation.update!(conversation_params.except(:description, :model))
-        add_interaction
+        interact_with_chat_service
       end
 
       flash.now[:success] = "¡Conversación actualizada!"
@@ -85,37 +84,13 @@ class ConversationsController < ApplicationController
     @conversation.title = title if title.present?
   end
 
-  def create_initial_interaction
-    chat_service = OpenAI::ChatService.new
+  def interact_with_chat_service
+    chat_service = OpenAI::ChatService.new(conversation: @conversation)
     chat_service.send_message(conversation_params[:description])
-    response = chat_service.receive_response
 
-    interaction = @conversation.interactions.build(
-      question_text: conversation_params[:description],
-      answer_text: response,
-      response_metadata: {}, # Agrega los metadatos necesarios aquí
-      model_used: conversation_params[:model],
-      prompt_settings: { max_tokens: chat_service.max_tokens },
-      api_request_details: { prompt: conversation_params[:description] },
-      api_response_details: { full_response: response }
-    )
-    interaction.save!
+    response = chat_service.receive_response
+    Rails.logger.info "\n\n 😀Response: #{response}"
   end
 
-  def add_interaction
-    chat_service = OpenAI::ChatService.new
-    chat_service.send_message(conversation_params[:description])
-    response = chat_service.receive_response
 
-    interaction = @conversation.interactions.build(
-      question_text: conversation_params[:description],
-      answer_text: response,
-      response_metadata: {}, # Agrega los metadatos necesarios aquí
-      model_used: @conversation.interactions.first.model_used,
-      prompt_settings: { max_tokens: chat_service.max_tokens },
-      api_request_details: { prompt: conversation_params[:description] },
-      api_response_details: { full_response: response }
-    )
-    interaction.save!
-  end
 end
