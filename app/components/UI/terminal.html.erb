@@ -1,4 +1,4 @@
-<div data-controller="copy" class="w-full flex flex-col border border-transparent rounded-xl overflow-hidden shadow-lg shadow-gray-950 my-6">
+<div data-controller="copy highlight" class="w-full flex flex-col border border-transparent rounded-xl overflow-hidden shadow-lg shadow-gray-950 my-6">
   <div class="w-full px-4 py-2 flex justify-between items-center gap-4 bg-indigo-950">
     <div class="flex justify-start items-center gap-4">
       <div class="flex">
@@ -14,5 +14,5 @@
       </span>
     </div>
   </div>
-  <pre class="px-8 py-4 bg-black text-white"><code data-copy-target="source"><%= @code.html_safe %></code></pre>
+  <pre class="px-8 py-4 bg-black text-white"><code class="language-<%= language %>" data-copy-target="source"><%= @code.html_safe %></code></pre>
 </div>
