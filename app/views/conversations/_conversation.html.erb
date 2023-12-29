@@ -1,33 +1,14 @@
 
 
-<section class="w-full h-custom  px-12 py-20 h-custom">
-  <div class="container mx-auto flex flex-col justify-between items-between gap-12 relative">
-    <ul role="list" class="overflow-y-auto flex flex-col-reverse mb-48">
+<section class="w-full">
+  <div class="container mx-auto flex flex-col justify-between items-between h-custom">
+    <ul role="list" class="w-4/5 mx-auto overflow-y-auto flex flex-col-reverse px-4">
       <%= turbo_stream_from "#{dom_id(@conversation)}_interactions" %>
       <div id="<%= dom_id(@conversation) %>_interactions">
         <%= render @conversation.interactions %>
       </div>
     </ul>
 
-    <%= render partial: 'form', conversation: @conversation %>
+    <%= render partial: 'interactions/form', locals: { conversation: @conversation } %>
   </div>
 </section>
-
-
-
-<% if 1 == 0 %>
-  <section class="relative">
-  <div class="w-full lg:w-2/3 lg:mx-auto lg:px-4 flex flex-col gap-8 mb-56">
-    <%= turbo_frame_tag "interactions_#{@conversation.id}" do %>
-      <% @conversation.interactions.each do |interaction|%>
-        <%= render "interactions/interaction", interaction: interaction %>
-      <% end %>
-    <% end %>
-  </div>
-  <div class="container rounded-b-xl mx-auto flex pb-8 bg-slate-950 fixed bottom-12 left-5/6">
-    <%= render "form", conversation: @conversation %>
-  </div>
-</section>
-
-
-<% end %>
