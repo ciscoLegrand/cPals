@@ -68,3 +68,5 @@ gem 'ruby-openai'
 gem 'view_component'
 gem 'inline_svg'
 gem 'redcarpet'
+
+gem "sidekiq"
