@@ -34,6 +34,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_25_203235) do
     t.string "model"
     t.jsonb "usage"
     t.string "system_fingerprint"
+    t.integer "response_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["conversation_id"], name: "index_interactions_on_conversation_id"

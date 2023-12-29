@@ -8,7 +8,7 @@ class CreateInteractions < ActiveRecord::Migration[7.1]
       t.string :model
       t.jsonb :usage
       t.string :system_fingerprint
-
+      t.integer :response_number
       t.timestamps
     end
   end
