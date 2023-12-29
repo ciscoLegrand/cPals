@@ -1,3 +1,1 @@
-<%= turbo_frame_tag "conversation_#{@conversation.id}", class: 'container mx-auto' do %>
-  <%= render 'conversations/conversation', conversation: @conversation %>
-<% end %>
+<%= render @conversation %>
