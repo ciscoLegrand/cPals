@@ -19,8 +19,8 @@
   <body class="bg-gray-800">
     <%= render 'layouts/shared/notification' %>
     <div class="relative z-0 flex h-full w-full overflow-hidden">
-      <aside class="hidden md:w-1/6 h-screen flex-shrink-1 overflow-x-hidden bg-black md:flex flex-col justify-between relative">
-        <nav class="hidden md:w-1/6 md:flex flex-col gap-3 overflow-y-auto-scroll h-screen fixed bg-black">
+      <aside class="hidden md:w-1/6 h-screen flex-shrink-1 overflow-x-hidden md:flex flex-col justify-between relative">
+        <nav class="hidden md:w-1/6 md:flex flex-col gap-3 overflow-y-auto-scroll h-screen fixed">
           <%= link_to 'cPal', root_path, class: 'w-full px-4 py-2 text-white text-center text-xl font-semibold' %>
           <hr class="border-b border-b-gray-700">
           <h2 class="w-full text-sm font-medium text-gray-500 px-4"><%= t('.today') %></h2>
@@ -51,7 +51,7 @@
                 dropdown: 'w-full bottom-20 left-0 z-40 shadow-lg shadow-slate-700 rounded-lg bg-slate-900 text-gray-200',
               }) %>
       </aside>
-      <main class="w-5/6 relative flex min-h-screen flex-1 flex-col items-center overflow-hidden" data-controller="dropdown">
+      <main class="w-5/6 relative flex h-custom overflow-y-scroll flex-1 flex-col items-center overflow-hidden bg-slate-950 my-12 mx-8 rounded-xl" data-controller="dropdown">
         <%= yield %>
       </main>
     </div>

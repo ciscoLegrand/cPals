@@ -3,11 +3,12 @@
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
+  height: 12px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #585858;
+  background: transparent;
 }
 
 /* Handle */
@@ -23,4 +24,8 @@
 .hljs {
   background-color: black !important;
   width: 100%;
+}
+
+.h-custom {
+  height: calc(100vh - 6rem);
 }

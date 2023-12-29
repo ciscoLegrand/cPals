@@ -4,7 +4,7 @@
           tabindex=0 
           data-dropdown-target="openButton"
           data-action="click->dropdown#open"
-          class="flex justify-start items-center w-full px-4 py-2 text-sm leading-5 text-left gap-2 hover:bg-slate-900 hover:text-white focus:outline-none focus:bg-gray-700 focus:text-white hover:cursor-pointer rounded-lg">
+          class="flex justify-start items-center w-full px-4 py-2 text-sm leading-5 text-left gap-2 bg-slate-800 hover:bg-slate-700 hover:text-white focus:outline-none focus:bg-gray-700 focus:text-white hover:cursor-pointer rounded-lg shadow shadow-slate-700">
     <span data-dropdown-target="model" class="text-xl text-gray-300 font-bold">ChatGPT 4</span>
   </button>
   <dropdown data-dropdown-target="dropdownContent"
@@ -21,33 +21,35 @@
   </dropdown>
 </div>
 
-<div class="w-full flex flex-col justify-end items-end gap-16 bg-gray-800 min-h-screen">
-  <div class="container mx-auto grid grid-cols-2 gap-4">
-    <div class="col-span-1 px-4 py-2 text-gray-200 border border-gray-600 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer hover:bg-gray-700">
-      <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
-      <span class="w-full text-gray-400 text-sm truncate">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat.
-      </span>
-    </div>
-    <div class="col-span-1 px-4 py-2 text-gray-200 border border-gray-600 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer hover:bg-gray-700">
-      <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
-      <span class="w-full text-gray-400 text-sm truncate">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat, recusandae alias ratione tempora eligendi numquam dicta
-      </span>
-    </div>
-    <div class="col-span-1 px-4 py-2 text-gray-200 border border-gray-600 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer hover:bg-gray-700">
-      <div class="w-full flex justify-between items-center gap-4">
+<div id="new_conversation_main" class="w-full flex flex-col justify-end items-end gap-16 bg-slate-950 h-custom rounded-xl">
+  <div class="container mx-auto">
+    <div class="w-4/5 mx-auto grid grid-cols-2 gap-4">
+      <div class="col-span-1 px-4 py-2 text-gray-200 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer bg-gray-900 hover:bg-gray-700 shadow shadow-gray-900">
         <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
+        <span class="w-full text-gray-400 text-sm truncate">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat.
+        </span>
       </div>
-      <span class="w-full text-gray-400 text-sm truncate">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat, recusandae alias ratione tempora 
-      </span>
-    </div>
-    <div class="col-span-1 px-4 py-2 text-gray-200 border border-gray-600 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer hover:bg-gray-700">
-      <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
-      <span class="w-full text-gray-400 text-sm truncate">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat, i
-      </span>
+      <div class="col-span-1 px-4 py-2 text-gray-200 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer bg-gray-900 hover:bg-gray-700 shadow shadow-gray-900">
+        <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
+        <span class="w-full text-gray-400 text-sm truncate">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat, recusandae alias ratione tempora eligendi numquam dicta
+        </span>
+      </div>
+      <div class="col-span-1 px-4 py-2 text-gray-200 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer bg-gray-900 hover:bg-gray-700 shadow shadow-gray-900">
+        <div class="w-full flex justify-between items-center gap-4">
+          <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
+        </div>
+        <span class="w-full text-gray-400 text-sm truncate">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat, recusandae alias ratione tempora 
+        </span>
+      </div>
+      <div class="col-span-1 px-4 py-2 text-gray-200 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer bg-gray-900 hover:bg-gray-700 shadow shadow-gray-900">
+        <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
+        <span class="w-full text-gray-400 text-sm truncate">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat, i
+        </span>
+      </div>
     </div>
   </div>
   <%= turbo_frame_tag 'new_conversation',
