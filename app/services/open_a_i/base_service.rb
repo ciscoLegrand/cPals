@@ -2,7 +2,7 @@ module OpenAI
   module ClientInitializer
     def setup_client(options = {})
       OpenAI::Client.new(
-        access_token: Rails.application.credentials.openai_access_token,
+        access_token: Rails.application.credentials.openai_api_key,
         **options
       )
     end
