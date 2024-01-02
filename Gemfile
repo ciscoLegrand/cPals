@@ -70,3 +70,5 @@ gem 'inline_svg'
 gem 'redcarpet'
 
 gem "sidekiq"
+
+gem "devise"

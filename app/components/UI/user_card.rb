@@ -5,7 +5,7 @@ class UI::UserCard < ViewComponent::Base
 
   def initialize(user:, style:)
     super
-    @user = user.nil? ? guest : user
+    @user = user
     @style = style
   end
 
@@ -25,18 +25,12 @@ class UI::UserCard < ViewComponent::Base
     'text-gray-200 font-semibold'
   end
 
-  def guest
-    {
-      username: 'Guest'
-    }
-  end
-
   def links
     [
       { text: 'Profile', path: '#', icon: 'icons/cards/user-cog.svg' },
       { text: 'Settings', path: '#', icon: 'icons/cards/adjustments.svg' },
       { text: 'My Plan', path: '#', icon: 'icons/cards/credit-card.svg' },
-      { text: 'Sign out', path: '#', icon: 'icons/cards/logout.svg' }
+      { text: 'Sign out', path: destroy_user_session_path, icon: 'icons/cards/logout.svg' }
     ]
   end
 end
