@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_02_160529) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_02_170405) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -18,13 +18,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_02_160529) do
   enable_extension "unaccent"
 
   create_table "conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.integer "user_id"
+    t.uuid "user_id", null: false
     t.string "ip_address"
     t.string "title"
     t.string "model"
     t.jsonb "prompt_settings"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_conversations_on_user_id"
   end
 
   create_table "interactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -48,9 +49,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_02_160529) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.string "surname"
+    t.string "username"
+    t.integer "role", default: 0
+    t.string "phone"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "conversations", "users"
   add_foreign_key "interactions", "conversations"
 end

@@ -19,13 +19,13 @@ class ConversationsController < ApplicationController
 
   # POST /conversations
   def create
-    @conversation = Conversation.new(conversation_params.except(:description))
+    @conversation = current_user.conversations.new(conversation_params.except(:description))
     ActiveRecord::Base.transaction do
       generate_and_set_title
       @conversation.save!
       @interaction = Interaction.create(conversation: @conversation, role: 'user', model: @conversation.model, content: conversation_params[:description])
 
-      OpenAi::ChatJob.perform_later(@interaction.conversation_id)
+      # OpenAi::ChatJob.perform_later(@interaction.conversation_id)
     end
 
     respond_to do |format|
