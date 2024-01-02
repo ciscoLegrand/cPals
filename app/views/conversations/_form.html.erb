@@ -1,10 +1,8 @@
 <%= turbo_frame_tag "#{dom_id(@conversation)}_conversation_form", class: 'container mx-auto bg-slate-950 py-4' do %>
   <%= form_with(model: @conversation, class: "w-full") do |form| %>
 
-    <%= form.hidden_field :user_id, value: 1 %>
     <%= form.hidden_field :ip_address, value: request.remote_ip %>
-    <%= form.hidden_field :model, value: 'gpt-4', data: {
-                          dropdown_target: 'hiddenModel'} %>
+    <%= form.hidden_field :model, value: 'gpt-4', data: { dropdown_target: 'hiddenModel'} %>
 
     <div class="w-4/5 mx-auto flex flex-col gap-4 relative">
       <%= form.text_area :description, 
