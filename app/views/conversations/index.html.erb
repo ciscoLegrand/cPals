@@ -2,8 +2,11 @@
   <ul class="flex flex-col mb-4">
     <% @conversations.each do |conversation| %>
       <%= link_to conversation.title.presence || conversation.id, conversation, data: {
-        turbo_frame: "_top",
+        turbo_frame: '_top',
       }, class: 'p-2 text-gray-200 rounded-lg hover:bg-gray-700 mx-2 text-sm truncate' %>
     <% end %>
   </ul>
 <% end %>
+
+
+

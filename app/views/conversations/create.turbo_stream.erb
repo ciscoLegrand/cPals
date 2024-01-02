@@ -1,3 +1,9 @@
 <%= turbo_stream.prepend "notification", partial: "layouts/shared/notification" %>
-<%= turbo_stream.prepend "conversations_today", link_to(@conversation.title.presence || @conversation.id.truncate(12), @conversation, id: dom_id(@conversation), class: 'p-2 text-gray-200 rounded-lg hover:bg-gray-700 mx-2 text-sm truncate') %>
-<%= turbo_stream.replace "new_conversation_main", partial: "conversations/conversation", conversatrion: @conversation %>
+
+<%= turbo_stream.prepend "conversations_today",
+                          link_to(@conversation.title.presence || @conversation.id.truncate(12),
+                          @conversation, data: {
+                            turbo_frame: '_top',
+                          }, class: 'p-2 text-gray-200 rounded-lg hover:bg-gray-700 mx-2 text-sm truncate') %>
+
+<%= turbo_stream.replace "new_conversation", partial: "conversations/conversation", conversatrion: @conversation %>
