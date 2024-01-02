@@ -48,7 +48,7 @@
             <% end %>
           </nav>
 
-          <%= render UI::UserCard.new(user: nil, style: {
+          <%= render UI::UserCard.new(user: current_user, style: {
                   container: 'w-1/6 fixed bottom-4 left-0 rounded-xl flex justify-start items-center px-4',
                   dropdown: 'w-full bottom-20 left-0 z-40 shadow-lg shadow-slate-700 rounded-lg bg-slate-900 text-gray-200',
                 }) %>
