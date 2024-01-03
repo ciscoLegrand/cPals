@@ -78,3 +78,5 @@ gem "sidekiq"
 gem "devise"
 
 gem "mailjet"
+
+gem "rubocop", require: false
