@@ -28,12 +28,15 @@
           <%= active_link_to 'Inicio', root_path, class: 'w-24 flex justify-center items-center flex-1 nav-link' %>
           <%= active_link_to 'Rails', railsnew_path, class: 'w-24 flex justify-center items-center flex-1 nav-link' %>
           <%= active_link_to 'ChatIA', chatia_path, class: 'w-24 flex justify-center items-center flex-1 nav-link' %>
-          <%= active_link_to 'Contacto', '#', class: 'w-24 flex justify-center items-center flex-1 nav-link' %>
+          <%= active_link_to 'Contacto', contact_path, class: 'w-24 flex justify-center items-center flex-1 nav-link' %>
         </div>
       </div>
       <div class="flex justify-end lg:col-start-3 gap-4">
         <!-- Menu Toggle Button -->
-        <%= link_to 'login', '', class: 'w-24 btn btn-success' %>
+        <%= render UI::UserCard.new(user: current_user, style: {
+            container: 'w-2/5 rounded-xl flex justify-start items-center px-4 relative',
+            dropdown: 'w-80 py-12 top-20 right-0 z-40 shadow-lg shadow-slate-700 rounded-lg bg-slate-900 text-gray-200',
+          }) %>
       </div>
     </div>
   </nav>
