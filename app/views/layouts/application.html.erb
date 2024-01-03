@@ -19,9 +19,7 @@
   <body class="bg-gray-800">
     <div class="w-full" data-controller="dropdown">
       
-      <% if user_signed_in? %>
-        <%= render 'layouts/shared/notification' %>
-      <% end %>
+      <%= render 'layouts/shared/notification' %>
       <%= render 'layouts/shared/navbar' unless action_name.eql?('chatia') %>
       <%= yield %>
     </div>
