@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
@@ -25,7 +27,7 @@ RSpec.describe User, type: :model do
     user = FactoryBot.build(:user, username: nil)
     expect(user).to be_valid
 
-    existing_user = FactoryBot.create(:user, username: 'testuser')
+    FactoryBot.create(:user, username: 'testuser')
     user_with_same_username = FactoryBot.build(:user, username: 'testuser')
     expect(user_with_same_username).not_to be_valid
     expect(user_with_same_username.errors[:username]).to include(I18n.t('errors.messages.taken'))

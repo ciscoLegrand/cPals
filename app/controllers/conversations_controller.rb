@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConversationsController < ApplicationController
   before_action :set_conversation, only: %i[show destroy]
 
@@ -23,8 +25,8 @@ class ConversationsController < ApplicationController
       @conversation = current_user.conversations.new(conversation_params.except(:description))
       @conversation.title = generate_title
       @conversation.save!
-      interaction = @conversation.interactions.create!(role: 'user', model: @conversation.model,
-                                                       content: conversation_params[:description])
+      @conversation.interactions.create!(role: 'user', model: @conversation.model,
+                                         content: conversation_params[:description])
     end
 
     OpenAi::ChatJob.perform_later(@conversation.id)

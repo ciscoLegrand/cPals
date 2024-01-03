@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
+# rubocop:disable Metrics/BlockLength
 RSpec.feature 'User Access to Restricted Area', type: :feature do
   scenario 'User visits restricted area and is redirected to login page' do
     # Paso 1: Visitar la página de inicio
@@ -39,7 +42,7 @@ RSpec.feature 'User Access to Restricted Area', type: :feature do
     fill_in 'Password confirmation', with: valid_data[:password]
     click_button 'Registro'
 
-    # Paso 8: Confirmar la cuenta del usuario (esto puede requerir pasos adicionales dependiendo de cómo esté configurado Devise)
+    # Paso 8: Confirmar la cuenta del usuario
     user = User.last
     expect(user.confirmed?).to be_falsey
     expect(user).to be_valid
@@ -62,3 +65,4 @@ RSpec.feature 'User Access to Restricted Area', type: :feature do
     expect(page).to have_content('ChatGPT 4')
   end
 end
+# rubocop:enable Metrics/BlockLength

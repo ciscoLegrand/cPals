@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InteractionsController < ApplicationController
   include ActionView::RecordIdentifier
 

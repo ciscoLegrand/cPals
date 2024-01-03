@@ -1,4 +1,6 @@
-module ApplicationHelper
+# frozen_string_literal: true
+
+module ApplicationHelper # rubocop:disable Style/Documentation
   def active_link_to(text = nil, path = nil, **options, &block)
     link = block_given? ? text : path
 
