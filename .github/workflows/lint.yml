@@ -8,20 +8,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Read .ruby-version
-        run: echo "RUBY_VERSION=$(cat .ruby-version)" >> $GITHUB_ENV
+        with:
+          token: ${{ secrets.GH_PAT }}
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
 
-      - name: Install dependencies
-        run: |
-          echo "🔍 Instalando dependencias..."
-          gem install bundler
-          bundle install
+      - name: Read .ruby-version
+        run: echo "RUBY_VERSION=$(cat .ruby-version)" >> $GITHUB_ENV
 
       - name: Run RuboCop
         run: bundle exec rubocop || echo "🚨 RuboCop encontró problemas, intentando autocorrección..."
@@ -30,11 +27,11 @@ jobs:
         run: |
           bundle exec rubocop -A
           if [[ `git status --porcelain` ]]; then
-            git config --global user.name 'github-actions[bot]'
-            git config --global user.email 'github-actions-bot@users.noreply.github.com'
+            git config user.name 'github-actions[bot]'
+            git config user.email 'github-actions-bot@users.noreply.github.com'
             git add .
             git commit -m "🤖 Autocorrected RuboCop offenses"
-            git push
+            git push origin HEAD:${{ github.ref }}
             echo "🔄 Ejecutando RuboCop nuevamente después de la autocorrección"
             bundle exec rubocop
           else
