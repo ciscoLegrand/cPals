@@ -75,3 +75,5 @@ gem 'redcarpet'
 gem "sidekiq"
 
 gem "devise"
+
+gem "mailjet"
