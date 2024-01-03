@@ -8,7 +8,7 @@ module OpenAI
     # @param assistant_id [String] el ID del asistente para el thread.
     # @return [OpenAI::Thread] el objeto thread creado.
     def create_thread(assistant_id)
-      client.threads.create(assistant_id: assistant_id)
+      client.threads.create(assistant_id:)
     end
 
     # Envía un mensaje en un thread específico.
@@ -17,15 +17,14 @@ module OpenAI
     # @param content [String] el contenido del mensaje.
     # @return [OpenAI::Message] el objeto mensaje enviado.
     def send_message(thread_id, role, content)
-      response = client.messages.create(
-        model: model,
-        thread_id: thread_id,
-        role: role,
-        content: content,
-        max_tokens: max_tokens,
+      client.messages.create(
+        model:,
+        thread_id:,
+        role:,
+        content:,
+        max_tokens:,
         **options
       )
-      response
     rescue OpenAI::Errors::OpenAIError => e
       log_error(e)
       nil # O manejar el error como sea apropiado

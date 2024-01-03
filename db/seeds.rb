@@ -8,4 +8,5 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-user = User.find_or_create_by!(email: 'cisco.glez@gmail.com', name: 'cisco', username: 'ciscolegrand', phone: '000999888', role: 1, password: 'test123')
+user = User.find_or_create_by!(email: 'cisco.glez@gmail.com', name: 'cisco', username: 'ciscolegrand',
+                               phone: '000999888', role: 1, password: 'test123')

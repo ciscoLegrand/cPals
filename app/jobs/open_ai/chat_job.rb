@@ -6,7 +6,7 @@ class OpenAi::ChatJob < ApplicationJob
   def perform(conversation_id)
     @conversation = Conversation.find(conversation_id)
     call_openai
-    Rails.logger.info "🤖 OpenAI ChatJob finished"
+    Rails.logger.info '🤖 OpenAI ChatJob finished'
   end
 
   private
@@ -37,8 +37,8 @@ class OpenAi::ChatJob < ApplicationJob
   def stream_proc
     messages = create_messages
     proc do |chunk, _bytesize|
-      new_content = chunk.dig("choices", 0, "delta", "content")
-      message = messages.find { |m| m.response_number == chunk.dig("choices", 0, "index") }
+      new_content = chunk.dig('choices', 0, 'delta', 'content')
+      message = messages.find { |m| m.response_number == chunk.dig('choices', 0, 'index') }
       message.update(content: message.content + new_content) if new_content
     end
   end

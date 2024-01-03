@@ -3,7 +3,8 @@ class InteractionsController < ApplicationController
 
   def create
     @conversation = Conversation.find(params[:conversation_id])
-    @interaction = Interaction.create(conversation_id: @conversation.id, role: 'user', model: @conversation.model, content: interaction_params[:content])
+    @interaction = Interaction.create(conversation_id: @conversation.id, role: 'user', model: @conversation.model,
+                                      content: interaction_params[:content])
 
     OpenAi::ChatJob.perform_later(@conversation.id)
 

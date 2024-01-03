@@ -9,20 +9,20 @@ class Interaction < ApplicationRecord
   after_update_commit -> { broadcast_updated }
 
   def broadcast_created
-    Rails.logger.info "\nBROADCAST_CREATED\n🍌 conversation: #{conversation.title}\n🥝 interaction: #{self.content}\n"
+    Rails.logger.info "\nBROADCAST_CREATED\n🍌 conversation: #{conversation.title}\n🥝 interaction: #{content}\n"
     broadcast_append_later_to(
       "#{dom_id(conversation)}_interactions",
-      partial: "interactions/interaction",
+      partial: 'interactions/interaction',
       locals: { interaction: self, scroll_to: true },
       target: "#{dom_id(conversation)}_interactions"
     )
   end
 
   def broadcast_updated
-    Rails.logger.info "\nBROADCAST_UPDATED\n🍌 conversation: #{conversation.title}\n🥝 interaction: #{self.content}\n"
+    Rails.logger.info "\nBROADCAST_UPDATED\n🍌 conversation: #{conversation.title}\n🥝 interaction: #{content}\n"
     broadcast_append_to(
       "#{dom_id(conversation)}_interactions",
-      partial: "interactions/interaction",
+      partial: 'interactions/interaction',
       locals: { interaction: self, scroll_to: true },
       target: "#{dom_id(conversation)}_interactions"
     )
@@ -40,7 +40,7 @@ class Interaction < ApplicationRecord
     end
 
     def block_code(code, language)
-      UI::Terminal.new(code: CGI.escapeHTML(code), language: language).render_in(@view_context)
+      UI::Terminal.new(code: CGI.escapeHTML(code), language:).render_in(@view_context)
     end
 
     def codespan(code)
@@ -48,10 +48,10 @@ class Interaction < ApplicationRecord
     end
   end
 
-
   def answer_text_to_html(view_context)
     renderer = CustomRender.new(view_context, hard_wrap: true, filter_html: true)
-    markdown = Redcarpet::Markdown.new(renderer, fenced_code_blocks: true, no_intra_emphasis: true, autolink: true, tables: true, lax_spacing: true)
+    markdown = Redcarpet::Markdown.new(renderer, fenced_code_blocks: true, no_intra_emphasis: true, autolink: true,
+                                                 tables: true, lax_spacing: true)
     markdown.render(content).html_safe
   end
 end

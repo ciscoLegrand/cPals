@@ -5,7 +5,7 @@ module OpenAI
       response = client.chat(
         parameters: {
           model: @model,
-          messages: [{ role: "user", content: prompt }],
+          messages: [{ role: 'user', content: prompt }],
           temperature: 1
         }
       )
@@ -18,7 +18,7 @@ module OpenAI
     private
 
     def extract_title(response)
-      response.dig("choices", 0, "message", "content").strip
+      response.dig('choices', 0, 'message', 'content').strip
     end
   end
 end

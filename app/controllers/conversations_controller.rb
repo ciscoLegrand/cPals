@@ -23,17 +23,21 @@ class ConversationsController < ApplicationController
       @conversation = current_user.conversations.new(conversation_params.except(:description))
       @conversation.title = generate_title
       @conversation.save!
-      interaction = @conversation.interactions.create!(role: 'user', model: @conversation.model, content: conversation_params[:description])
+      interaction = @conversation.interactions.create!(role: 'user', model: @conversation.model,
+                                                       content: conversation_params[:description])
     end
 
     OpenAi::ChatJob.perform_later(@conversation.id)
 
     respond_to do |format|
-      flash.now[:success] = { title: "¡Conversación creada!", body: "¡Tu conversación ha sido creada exitosamente! Ahora puedes verla en la lista de conversaciones." }
+      flash.now[:success] =
+        { title: '¡Conversación creada!',
+          body: '¡Tu conversación ha sido creada exitosamente! Ahora puedes verla en la lista de conversaciones.' }
       format.html { redirect_to @conversation }
       format.turbo_stream
     rescue ActiveRecord::RecordInvalid => e
-      flash.now[:error] = { title: "¡Error al crear la conversación!", body: "Hubo un error al crear la conversación. #{e.message}" }
+      flash.now[:error] =
+        { title: '¡Error al crear la conversación!', body: "Hubo un error al crear la conversación. #{e.message}" }
       format.html { render :new, status: :unprocessable_entity }
       format.turbo_stream { render :new, status: :unprocessable_entity }
     end
@@ -42,7 +46,7 @@ class ConversationsController < ApplicationController
   # DELETE /conversations/1
   def destroy
     @conversation.destroy!
-    redirect_to conversations_url, notice: "Conversation was successfully destroyed."
+    redirect_to conversations_url, notice: 'Conversation was successfully destroyed.'
   end
 
   private
@@ -57,7 +61,6 @@ class ConversationsController < ApplicationController
 
   def generate_title
     title_service = OpenAI::TitleGeneratorService.new
-    title = title_service.generate_title(conversation_params[:description])
-    title
+    title_service.generate_title(conversation_params[:description])
   end
 end

@@ -3,12 +3,12 @@ module OpenAI
     attr_reader :conversation, :model, :max_tokens, :temperature
 
     def initialize(conversation:)
-      super(conversation: conversation)
+      super(conversation:)
       @messages = []
     end
 
     def send_message(content)
-      @messages << { role: 'user', content: content }
+      @messages << { role: 'user', content: }
       create_user_interaction(content)
       update_chat
     end
@@ -22,10 +22,10 @@ module OpenAI
     def update_chat
       response = client.chat(
         parameters: {
-          model: model,
+          model:,
           messages: @messages,
-          max_tokens: max_tokens,
-          temperature: temperature,
+          max_tokens:,
+          temperature:,
           n: RESPONSES_PER_MESSAGE
         }
       )
@@ -43,8 +43,8 @@ module OpenAI
       interaction = @conversation.interactions.build(
         role: 'user',
         model: @conversation.model,
-        usage: { },
-        content: content,
+        usage: {},
+        content:,
         system_fingerprint: nil
       )
     end
@@ -62,20 +62,19 @@ module OpenAI
 
     def update_conversation(response)
       tokens = if @conversation.prompt_settings.blank?
-                        0
-                      else
-                        @conversation.prompt_settings['total_tokens']
-                      end
+                 0
+               else
+                 @conversation.prompt_settings['total_tokens']
+               end
 
       tokens += response['usage']['total_tokens']
 
       @conversation.update! prompt_settings: {
-        model: model,
-        max_tokens: max_tokens,
-        temperature: temperature,
+        model:,
+        max_tokens:,
+        temperature:,
         total_tokens: tokens
       }
     end
-
   end
 end

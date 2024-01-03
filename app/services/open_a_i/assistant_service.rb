@@ -9,7 +9,7 @@ module OpenAI
     # @param name [String] un nombre único para el asistente.
     # @return [OpenAI::Assistant] el objeto asistente creado.
     def create_assistant(model, name)
-      client.assistants.create(model: model, name: name)
+      client.assistants.create(model:, name:)
     end
 
     # Envía un mensaje a través de un asistente y obtiene una respuesta.
@@ -17,12 +17,12 @@ module OpenAI
     # @return [String] la respuesta del asistente.
     def send_message(prompt)
       response = client.completions.create(
-        model: model,
-        prompt: prompt,
-        max_tokens: max_tokens,
+        model:,
+        prompt:,
+        max_tokens:,
         **options
       )
-      response.choices.first&.text.strip
+      response.choices.first&.text&.strip
     rescue OpenAI::Errors::OpenAIError => e
       log_error(e)
       nil # O manejar el error como sea apropiado

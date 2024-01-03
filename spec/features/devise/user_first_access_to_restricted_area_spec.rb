@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.feature 'User Access to Restricted Area', type: :feature do
-
   scenario 'User visits restricted area and is redirected to login page' do
     # Paso 1: Visitar la página de inicio
     visit root_path
