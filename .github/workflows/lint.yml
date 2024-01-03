@@ -1,0 +1,48 @@
+name: Ruby Lint and Autocorrect
+
+on: [push, pull_request]
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Read .ruby-version
+        run: echo "RUBY_VERSION=$(cat .ruby-version)" >> $GITHUB_ENV
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          echo "🔍 Instalando dependencias..."
+          gem install bundler
+          bundle install
+
+      - name: Run RuboCop
+        run: bundle exec rubocop || echo "🚨 RuboCop encontró problemas, intentando autocorrección..."
+
+      - name: Autocorrect RuboCop offenses
+        run: |
+          bundle exec rubocop -A
+          if [[ `git status --porcelain` ]]; then
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            git add .
+            git commit -m "🤖 Autocorrected RuboCop offenses"
+            git push
+            echo "🔄 Ejecutando RuboCop nuevamente después de la autocorrección"
+            bundle exec rubocop
+          else
+            echo "✅ No se encontraron más ofensas de RuboCop después de la autocorrección"
+          fi
+
+      - name: Check for remaining offenses
+        if: failure()
+        run: |
+          echo "❌ Errores de RuboCop que no se pueden autocorregir."
+          exit 1
