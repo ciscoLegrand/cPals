@@ -5,7 +5,7 @@ class UI::UserCard < ViewComponent::Base
 
   def initialize(user:, style:)
     super
-    @user = user
+    @user = user || guest
     @style = style
   end
 
@@ -23,6 +23,18 @@ class UI::UserCard < ViewComponent::Base
 
   def text_style
     'text-gray-200 font-semibold'
+  end
+
+  def avatar_style
+    if @user.email.eql?('guest')
+      'border-2 border-indigo-600 rounded-full shadow-lg bg-amber-800 border-amber-700 text-white hover:text-red-500'
+    else
+      'border-2 border-indigo-600 rounded-full shadow-lg bg-indigo-800 border-indigo-700 text-white hover:text-red-500'
+    end
+  end
+
+  def guest
+    User.new(email: 'guest', username: 'Guest')
   end
 
   def links
