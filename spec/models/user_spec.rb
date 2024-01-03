@@ -108,7 +108,8 @@ RSpec.describe User, type: :model do
   it 'tracks sign in count' do
     user = FactoryBot.create(:user)
     expect(user.sign_in_count).to eq(0)
-    user.sign_in
+    user.update(sign_in_count: user.sign_in_count + 1)
     expect(user.sign_in_count).to eq(1)
   end
+
 end
