@@ -6,42 +6,78 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: 🔄 Checkout code
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.GH_PAT }}
+          fetch-depth: 0
 
-      - name: Set up Ruby
+      - name: 💾 Cargar caché de Bundler
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: 🚀 Configurar Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
 
-      - name: Install dependencies
+      - name: 🔍 Instalar dependencias
         run: |
-          echo "🔍 Instalando dependencias..."
-          gem install bundler
-          bundle install
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          echo "🔍 Dependencias instaladas."
 
-      - name: Run RuboCop
-        run: bundle exec rubocop || echo "🚨 RuboCop encontró problemas, intentando autocorrección..."
-
-      - name: Autocorrect RuboCop offenses
+      - name: 🔍 Identificar archivos modificados
         run: |
-          bundle exec rubocop -A
-          if [[ `git status --porcelain` ]]; then
-            git config user.name 'ciscoLegrand'
-            git config user.email 'cisco.glez@gmail.com'
-            git add .
-            git commit -m "🤖 Autocorrected RuboCop offenses"
-            git push https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
-            echo "🔄 Ejecutando RuboCop nuevamente después de la autocorrección"
-            bundle exec rubocop
+          modified_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.rb$' | xargs)
+          echo "files=$modified_files" >> $GITHUB_ENV
+          echo "Archivos modificados: $modified_files"
+
+      - name: 🕵️ Ejecutar RuboCop en archivos modificados
+        if: env.files
+        run: |
+          modified_files=(${{ env.files }})
+          if [ ${#modified_files[@]} -ne 0 ]; then
+            echo "Ejecutando RuboCop en: ${modified_files[@]}"
+            bundle exec rubocop ${modified_files[@]}
+            echo "RUBOCOP_STATUS=$?" >> $GITHUB_ENV
           else
-            echo "✅ No se encontraron más ofensas de RuboCop después de la autocorrección"
+            echo "✅ No hay archivos Ruby modificados para revisar."
+            echo "RUBOCOP_STATUS=0" >> $GITHUB_ENV
           fi
 
-      - name: Check for remaining offenses
-        if: failure()
+      - name: 🤖 Autocorregir ofensas de RuboCop
+        if: env.RUBOCOP_STATUS != 0
         run: |
-          echo "❌ Errores de RuboCop que no se pueden autocorregir."
-          exit 1
+          bundle exec rubocop -A
+          echo "🤖 Autocorrección realizada."
+
+      - name: ⚙️ Configurar Git para el Bot
+        if: env.RUBOCOP_STATUS != 0
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          echo "⚙️ Git configurado."
+
+      - name: 📤 Commit y Push si hay cambios
+        if: env.RUBOCOP_STATUS != 0
+        run: |
+          if [[ `git status --porcelain` ]]; then
+            git add .
+            git commit -m "🤖 Autocorregidas ofensas de RuboCop"
+            git push
+            echo "📤 Cambios subidos."
+          else
+            echo "✨ No hay cambios para subir."
+          fi
+
+      - name: ✅ Comprobación final
+        run: |
+          if [ $RUBOCOP_STATUS -eq 0 ]; then
+            echo "✅ No se encontraron ofensas de RuboCop."
+          else
+            echo "🔄 Ofensas de RuboCop autocorregidas."
+          fi
