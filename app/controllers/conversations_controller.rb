@@ -19,31 +19,31 @@ class ConversationsController < ApplicationController
     @conversation = Conversation.new
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   # POST /conversations
   def create
     ActiveRecord::Base.transaction do
       @conversation = current_user.conversations.new(conversation_params.except(:description))
       @conversation.title = generate_title
       @conversation.save!
-      @conversation.interactions.create!(role: 'user', model: @conversation.model,
-                                         content: conversation_params[:description])
+      @conversation.interactions
+                   .create!(role: 'user', model: @conversation.model, content: conversation_params[:description])
     end
 
     OpenAi::ChatJob.perform_later(@conversation.id)
 
     respond_to do |format|
-      flash.now[:success] =
-        { title: '¡Conversación creada!',
-          body: '¡Tu conversación ha sido creada exitosamente! Ahora puedes verla en la lista de conversaciones.' }
+      flash.now[:success] = {
+        title: '¡Conversación creada!',
+        body: '¡Tu conversación ha sido creada exitosamente! Ahora puedes verla en la lista de conversaciones.'
+      }
       format.html { redirect_to @conversation }
       format.turbo_stream
-    rescue ActiveRecord::RecordInvalid => e
-      flash.now[:error] =
-        { title: '¡Error al crear la conversación!', body: "Hubo un error al crear la conversación. #{e.message}" }
-      format.html { render :new, status: :unprocessable_entity }
-      format.turbo_stream { render :new, status: :unprocessable_entity }
     end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   # DELETE /conversations/1
   def destroy

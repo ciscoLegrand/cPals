@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module OpenAi
-  class ChatJob < ApplicationJob # rubocop:disable Style/Documentation
+  class ChatJob < ApplicationJob
     queue_as :default
 
     RESPONSES_PER_MESSAGE = 1

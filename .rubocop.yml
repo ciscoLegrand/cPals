@@ -1,5 +1,20 @@
 AllCops:
-  Include:
-    - 'app/**/*'
   Exclude:
-    - '**/*'
+    - 'bin/*'
+    - 'config/*'
+    - 'db/*'
+    - 'lib/*'
+    - 'spec/*'
+
+  Include:
+    - 'app/channels/*'
+    - 'app/components/*'
+    - 'app/controllers/*'
+    - 'app/helpers/*'
+    - 'app/jobs/*'
+    - 'app/mailers/*'
+    - 'app/models/*'
+
+
+Style/Documentation:
+  Enabled: false
