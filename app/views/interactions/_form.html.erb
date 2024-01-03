@@ -1,5 +1,6 @@
 <%= turbo_frame_tag "#{dom_id(@conversation)}_interaction_form", class: 'container mx-auto bg-slate-950 px-8 pb-4' do %>
-  <%= form_with(model: Interaction.new, url: [conversation, conversation.interactions.new]) do |form| %>
+  <%= form_with(model: Interaction.new, url: [@conversation, @conversation.interactions.new]) do |form| %>
+
     <div class="w-4/5 mx-auto flex flex-col gap-4 relative">
       <%= form.text_area :content,
               placeholder: 'Message cPal...',

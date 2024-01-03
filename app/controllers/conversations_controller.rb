@@ -19,14 +19,14 @@ class ConversationsController < ApplicationController
 
   # POST /conversations
   def create
-    @conversation = current_user.conversations.new(conversation_params.except(:description))
     ActiveRecord::Base.transaction do
-      generate_and_set_title
+      @conversation = current_user.conversations.new(conversation_params.except(:description))
+      @conversation.title = generate_title
       @conversation.save!
-      @interaction = Interaction.create(conversation: @conversation, role: 'user', model: @conversation.model, content: conversation_params[:description])
-
-      # OpenAi::ChatJob.perform_later(@interaction.conversation_id)
+      interaction = @conversation.interactions.create!(role: 'user', model: @conversation.model, content: conversation_params[:description])
     end
+
+    OpenAi::ChatJob.perform_later(@conversation.id)
 
     respond_to do |format|
       flash.now[:success] = { title: "¡Conversación creada!", body: "¡Tu conversación ha sido creada exitosamente! Ahora puedes verla en la lista de conversaciones." }
@@ -55,9 +55,9 @@ class ConversationsController < ApplicationController
     params.require(:conversation).permit(:user_id, :ip_address, :title, :description, :model)
   end
 
-  def generate_and_set_title
+  def generate_title
     title_service = OpenAI::TitleGeneratorService.new
     title = title_service.generate_title(conversation_params[:description])
-    @conversation.title = title if title.present?
+    title
   end
 end

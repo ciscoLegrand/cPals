@@ -9,19 +9,21 @@ class Interaction < ApplicationRecord
   after_update_commit -> { broadcast_updated }
 
   def broadcast_created
+    Rails.logger.info "\nBROADCAST_CREATED\n🍌 conversation: #{conversation.title}\n🥝 interaction: #{self.content}\n"
     broadcast_append_later_to(
       "#{dom_id(conversation)}_interactions",
       partial: "interactions/interaction",
-      locals: { message: self, scroll_to: true },
+      locals: { interaction: self, scroll_to: true },
       target: "#{dom_id(conversation)}_interactions"
     )
   end
 
   def broadcast_updated
+    Rails.logger.info "\nBROADCAST_UPDATED\n🍌 conversation: #{conversation.title}\n🥝 interaction: #{self.content}\n"
     broadcast_append_to(
       "#{dom_id(conversation)}_interactions",
       partial: "interactions/interaction",
-      locals: { message: self, scroll_to: true },
+      locals: { interaction: self, scroll_to: true },
       target: "#{dom_id(conversation)}_interactions"
     )
   end
