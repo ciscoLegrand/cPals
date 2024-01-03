@@ -21,7 +21,13 @@
 <% else %>
   <div class="flex flex-col justify-center items-center h-custom">
     <div class="flex flex-col justify-center items-center gap-4">
-      <h1 class="text-4xl font-bold text-gray-300">Welcome to ChatGPT 4</h1>
+      <h1 class="text-4xl font-bold text-gray-300 flex  items-center gap-4">Welcome to 
+        <%= link_to root_path, class: 'flex justify-start items-center' do %>
+          <span class="self-center text-3xl font-semibold whitespace-nowrap text-slate-400">c</span>
+          <span class="self-center text-blue-500 text-4xl font-semibold">Legrand</span>
+          <span class="self-center text-indigo-500 text-7xl font-extrabold">web</span> 
+        <% end %>
+        </h1>
       <p class="text-xl text-gray-300">Please sign in to continue</p>
     </div>
     <div class="flex flex-col justify-center items-center gap-4">
