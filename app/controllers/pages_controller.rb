@@ -1,8 +1,7 @@
 class PagesController < ApplicationController
-  def index
+  skip_before_action :authenticate_user!, only: [:index, :railsnew, :contact]
 
-  end
-
+  def index; end
   def chatia
     client = OpenAI::Client.new
     response = client.models.list
@@ -10,4 +9,6 @@ class PagesController < ApplicationController
   end
 
   def railsnew; end
+
+  def contact; end
 end

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   #cuscom routes
   get "chat-ia" => "pages#chatia", as: :chatia
   get "rails-new" => "pages#railsnew", as: :railsnew
+  get "contact" => "pages#contact", as: :contact
   # reources routes
   resources :conversations do
     resources :interactions
