@@ -5,6 +5,7 @@ AllCops:
     - 'db/*'
     - 'lib/*'
     - 'spec/*'
+    - 'vendor/*'
 
   Include:
     - 'app/channels/*'
