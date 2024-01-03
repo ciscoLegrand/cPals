@@ -1,0 +1,29 @@
+<% css_classes_input = "w-6 h-6 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 hover:cursor-pointer" %>
+<% css_classes_label = "w-full flex justify-center items-center gap-12 py-2 text-slate-200 dark:text-gray-300 hover:cursor-pointer" %>
+
+<div class="flex items-center gap-16 px-8 py-3 hover:bg-slate-600 hover:cursor-pointer">
+  <input  id="group-<%= target %>-<%= flag %>"
+          type="<%= type %>"
+          value="<%= flag %>"
+          name="<%= target %>"
+          data-action="change->rails-command#updateOutput"
+          data-rails-command-target="<%= target %>" 
+          class="<%= css_classes_input %>"
+          <%= "checked" if checked %> />
+
+  <label for="group-<%= target %>-<%= flag %>" class="<%= css_classes_label %>">
+    <div class="w-full flex flex-col justify-center items-start gap-2">
+      <div class="text-xl font-semibold text-slate-200 py-3">
+        <%= t(".flag_command_component.#{flag}") %>
+      </div>
+      <div class="text-slate-200 dark:text-gray-300">
+        <%= t(".flag_command_component.#{flag}_description") %>
+      </div>
+    </div>
+    <% if icon.present? %>
+      <figure class="flex justify-center items-center p-2 rounded-full">
+        <%= inline_svg_tag("icons/brands/#{icon}.svg", class: 'w-10 h-10') %>
+      </figure>
+    <% end %>
+  </label>
+</div>
