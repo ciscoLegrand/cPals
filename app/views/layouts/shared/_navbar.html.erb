@@ -1,0 +1,40 @@
+<header class="bg-slate-950 h-20 flex items-center shadow-lg shadow-slate-800 transition-all w-full">
+  <nav class="w-3/5 flex justify-between items-center mx-auto bg-slate-950 h-full" data-controller="navbar">
+    <div class="max-w-screen grid grid-cols-2 lg:grid-cols-3 items-center justify-between mx-auto p-4d">
+      <!-- Logo -->
+      <div>
+        <%= link_to root_path, class: 'flex justify-start items-center' do %>
+          <span class="self-center text-2xl font-semibold whitespace-nowrap text-slate-400">c</span>
+          <span class="self-center text-blue-500 text-2xl font-semibold">Legrand</span>
+          <span class="self-center text-indigo-500 text-3xl font-extrabold">web</span> 
+        <% end %>
+      </div>
+      <!-- Menu Toggle Button -->
+      <div class="lg:hidden flex justify-end">
+        <button class="size-6 ml-5 group focus:outline-none" data-action="navbar#toggleMainMenu">
+          <div class="rounded-xl bg-black h-0.5 w-6 my-0.5 group-hover:relative group-hover:top-1 group-hover:rotate-45 duration-500"></div>
+          <div class="rounded-xl bg-black h-0.5 w-6 my-0.5 group-hover:bg-transparent group-hover:duration-150"></div>
+          <div class="rounded-xl bg-black h-0.5 w-6 my-0.5 group-hover:relative group-hover:bottom-1 group-hover:-rotate-45 duration-500"></div>
+        </button>
+      </div>
+      <!-- Main Menu -->
+      <div id="navbar-multi-level" 
+           data-navbar-target="mainMenu"
+           class="fixed hidden top-12 left-0 col-span-2 w-full h-auto | md:top-14 | lg:relative lg:left-0 lg:top-0 lg:col-span-1 lg:block">
+        <div class="flex flex-col justify-center items-center font-medium p-4 rounded-lg | md:flex-row md:space-x-8 md:p-0 mt-4 md:mt-0">
+          <!-- User options -->
+          <!-- Elemento de la lista con dropdown -->
+          <!-- más elementos de la lista -->
+          <%= active_link_to 'Inicio', root_path, class: 'w-24 flex justify-center items-center flex-1 nav-link' %>
+          <%= active_link_to 'Rails', railsnew_path, class: 'w-24 flex justify-center items-center flex-1 nav-link' %>
+          <%= active_link_to 'ChatIA', chatia_path, class: 'w-24 flex justify-center items-center flex-1 nav-link' %>
+          <%= active_link_to 'Contacto', '#', class: 'w-24 flex justify-center items-center flex-1 nav-link' %>
+        </div>
+      </div>
+      <div class="flex justify-end lg:col-start-3 gap-4">
+        <!-- Menu Toggle Button -->
+        <%= link_to 'login', '', class: 'w-24 btn btn-success' %>
+      </div>
+    </div>
+  </nav>
+</header>
