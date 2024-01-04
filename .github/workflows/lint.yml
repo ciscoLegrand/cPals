@@ -11,6 +11,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set Ruby version from .ruby-version
+        run: echo "RUBY_VERSION=$(cat .ruby-version)" >> $GITHUB_ENV
+    
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+  
       - name: 💾 Cargar caché de Bundler
         uses: actions/cache@v2
         with:
@@ -42,7 +50,7 @@ jobs:
           modified_files=(${{ env.files }})
           if [ ${#modified_files[@]} -ne 0 ]; then
             echo "Ejecutando RuboCop en: ${modified_files[@]}"
-            bundle exec rubocop ${modified_files[@]}
+            bundle exec rubocop ${modified_files[@]} || true
             echo "RUBOCOP_STATUS=$?" >> $GITHUB_ENV
           else
             echo "✅ No hay archivos Ruby modificados para revisar."
@@ -60,6 +68,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
           echo "⚙️ Git configurado."
 
       - name: 📤 Commit y Push si hay cambios

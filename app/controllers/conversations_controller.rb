@@ -35,7 +35,7 @@ class ConversationsController < ApplicationController
 
     respond_to do |format|
       flash.now[:success] = {
-        title: '¡Conversación creada!',
+       title: "¡Conversación creada!",
         body: '¡Tu conversación ha sido creada exitosamente! Ahora puedes verla en la lista de conversaciones.'
       }
       format.html { redirect_to @conversation }
