@@ -19,8 +19,6 @@ class ConversationsController < ApplicationController
     @conversation = Conversation.new
   end
 
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
   # POST /conversations
   def create
     ActiveRecord::Base.transaction do
@@ -42,8 +40,6 @@ class ConversationsController < ApplicationController
       format.turbo_stream
     end
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
 
   # DELETE /conversations/1
   def destroy
