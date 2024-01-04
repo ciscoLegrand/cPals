@@ -16,6 +16,9 @@ class ConversationsController < ApplicationController
 
   # GET /conversations/new
   def new
+    client = OpenAI::Client.new
+    response = client.models.list
+    @models = response['data']
     @conversation = Conversation.new
   end
 
@@ -35,7 +38,7 @@ class ConversationsController < ApplicationController
 
     respond_to do |format|
       flash.now[:success] = {
-       title: "¡Conversación creada!",
+        title: '¡Conversación creada!',
         body: '¡Tu conversación ha sido creada exitosamente! Ahora puedes verla en la lista de conversaciones.'
       }
       format.html { redirect_to @conversation }
@@ -48,7 +51,11 @@ class ConversationsController < ApplicationController
   # DELETE /conversations/1
   def destroy
     @conversation.destroy!
-    redirect_to conversations_url, notice: 'Conversation was successfully destroyed.'
+    respond_to do |format|
+      flash.now[:success] = { title: '¡Conversación eliminada!', body: '¡Tu conversación ha sido eliminada exitosamente!' }
+      format.html { redirect_to chatia_path }
+      format.turbo_stream
+    end
   end
 
   private
