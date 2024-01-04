@@ -30,7 +30,6 @@ module OpenAi
       messages = []
       responses_per_message = 1
       responses_per_message.times do |i|
-        Rails.logger.info "Creating message #{i}: #{messages[i]}"
         message = @conversation.interactions.create(role: 'assistant', content: '', response_number: i)
         messages << message
       end
