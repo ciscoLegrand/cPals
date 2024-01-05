@@ -1,6 +1,6 @@
 name: 🚀 Ruby Lint & Autocorrect
 
-on: [push, pull_request]
+on: [pull_request]
 
 permissions:
   contents: write
@@ -46,3 +46,22 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+
+  automerge:
+    needs: [rubocop]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener número de PR y nombre de rama
+        id: pr_info
+        run: |
+          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "::set-output name=pr_number::${PR_NUMBER}"
+          echo "::set-output name=branch_name::${BRANCH_NAME}"
+
+      - name: Merge Pull Request
+        uses: pascalgn/automerge-action@v0.14.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          mergeMethod: merge
+          commitMessageTemplate: "[BOT] 🤖 Auto-merge PR #${{ steps.pr_info.outputs.pr_number }} in ${branch_name}}"
