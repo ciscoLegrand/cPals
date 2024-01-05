@@ -10,83 +10,23 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Set Ruby version from .ruby-version
-        run: echo "RUBY_VERSION=$(cat .ruby-version)" >> $GITHUB_ENV
-    
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
   
-      - name: 💾 Cargar caché de Bundler
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-
-      - name: 🚀 Configurar Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-
-      - name: 🔍 Instalar dependencias
+      - name: Configurar usuario Git para el bot
         run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
-          echo "🔍 Dependencias instaladas."
-
-      - name: 🔍 Identificar archivos modificados
+          git config --global user.name "GitHubBot"
+          git config --global user.email "github-bot@creadix.es"
+  
+      - name: Realizar cambios
         run: |
-          modified_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.rb$' | xargs)
-          echo "files=$modified_files" >> $GITHUB_ENV
-          echo "Archivos modificados: $modified_files"
-
-      - name: 🕵️ Ejecutar RuboCop en archivos modificados
-        if: env.files
+          # Aquí puedes agregar los comandos para realizar los cambios que necesitas
+          # Por ejemplo, modificar archivos, ejecutar scripts, etc.
+  
+      - name: Commit y Push a ${{ github.repository }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          modified_files=(${{ env.files }})
-          if [ ${#modified_files[@]} -ne 0 ]; then
-            echo "Ejecutando RuboCop en: ${modified_files[@]}"
-            bundle exec rubocop ${modified_files[@]} || true
-            echo "RUBOCOP_STATUS=$?" >> $GITHUB_ENV
-          else
-            echo "✅ No hay archivos Ruby modificados para revisar."
-            echo "RUBOCOP_STATUS=0" >> $GITHUB_ENV
-          fi
-
-      - name: 🤖 Autocorregir ofensas de RuboCop
-        if: env.RUBOCOP_STATUS != 0
-        run: |
-          bundle exec rubocop -A
-          echo "🤖 Autocorrección realizada."
-
-      - name: ⚙️ Configurar Git para el Bot
-        if: env.RUBOCOP_STATUS != 0
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git remote set-url origin https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
-          echo "⚙️ Git configurado."
-
-      - name: 📤 Commit y Push si hay cambios
-        if: env.RUBOCOP_STATUS != 0
-        run: |
-          if [[ `git status --porcelain` ]]; then
-            git add .
-            git commit -m "🤖 Autocorregidas ofensas de RuboCop"
-            git push
-            echo "📤 Cambios subidos."
-          else
-            echo "✨ No hay cambios para subir."
-          fi
-
-      - name: ✅ Comprobación final
-        run: |
-          if [ $RUBOCOP_STATUS -eq 0 ]; then
-            echo "✅ No se encontraron ofensas de RuboCop."
-          else
-            echo "🔄 Ofensas de RuboCop autocorregidas."
-          fi
+          git add .
+          git commit -m "Commit automático realizado por ${{ github.actor }}"
+          REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+          git push "${REPO_URL}"
+    
