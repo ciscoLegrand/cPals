@@ -1,20 +1,30 @@
 AllCops:
+  NewCops: enable
+
   Exclude:
     - 'bin/*'
     - 'config/*'
     - 'db/*'
     - 'lib/*'
+    - 'log/*'
+    - 'public/*'
     - 'spec/*'
+    - 'storage/*'
+    - 'tmp/*'
     - 'vendor/*'
+    - Gemfile
 
   Include:
-    - 'app/channels/*'
-    - 'app/components/*'
-    - 'app/controllers/*'
-    - 'app/helpers/*'
-    - 'app/jobs/*'
-    - 'app/mailers/*'
-    - 'app/models/*'
+    - 'app/components/**/*.rb'
+    - 'app/controllers/**/*.rb'
+    - 'app/helpers/**/*.rb'
+    - 'app/jobs/**/*.rb'
+    - 'app/mailers/**/*.rb'
+    - 'app/models/**/*.rb'
+    - 'app/policies/**/*.rb'
+    - 'app/serializers/**/*.rb'
+    - 'app/services/**/*.rb'
+    - 'app/uploaders/**/*.rb'
 
 
 Style/Documentation:

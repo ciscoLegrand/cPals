@@ -2,12 +2,45 @@
 
 module UI
   class Notification < ViewComponent::Base
-    attr_reader :data, :type
+    attr_reader :data, :type, :assets
+
+    NOTIFICATION_TYPES = [
+      success: {
+        icon: 'circle-check',
+        color: 'green-500',
+        bg_color: "green-100",
+        dark_bg_color: 'green-800',
+        dark_text_color: 'green-200'
+      },
+      error: {
+        icon: 'alert-triangle',
+        color: 'red-500',
+        bg_color: 'red-100',
+        dark_bg_color: 'red-800',
+        dark_text_color: 'red-200'
+      },
+      alert: {
+        icon: 'alert-triangle',
+        color: 'orange-500',
+        bg_color: 'orange-100',
+        dark_bg_color: 'orange-700',
+        dark_text_color: 'orange-200'
+      },
+      notice: {
+        icon: 'info-square-rounded',
+        color: 'blue-500',
+        bg_color: 'blue-100',
+        dark_bg_color: 'blue-800',
+        dark_text_color: 'blue-200'
+      }
+    ].freeze
 
     def initialize(type:, data:)
+      super
       @data = prepare_data(data)
       @data[:timeout] ||= 50_000
       @type = type
+      @assets = NOTIFICATION_TYPES[type]
     end
 
     def prepare_data(data)
@@ -16,71 +49,6 @@ module UI
         data.with_indifferent_access
       else
         { body: data }.with_indifferent_access
-      end
-    end
-
-    def icon
-      case type
-      when 'success'
-        'circle-check'
-      when 'alert'
-        'alert-triangle'
-      when 'error'
-        'alert-triangle'
-      when 'notice'
-        'info-square-rounded'
-      end
-    end
-
-    def color
-      case type
-      when 'success'
-        'green-500'
-      when 'error'
-        'red-500'
-      when 'alert'
-        'orange-500'
-      when 'notice'
-        'blue-500'
-      end
-    end
-
-    def bg_color
-      case type
-      when 'success'
-        'green-100'
-      when 'error'
-        'red-100'
-      when 'alert'
-        'orange-100'
-      when 'notice'
-        'blue-100'
-      end
-    end
-
-    def dark_bg_color
-      case type
-      when 'success'
-        'green-800'
-      when 'error'
-        'red-800'
-      when 'alert'
-        'orange-700'
-      when 'notice'
-        'blue-800'
-      end
-    end
-
-    def dark_text_color
-      case type
-      when 'success'
-        'green-200'
-      when 'error'
-        'red-200'
-      when 'alert'
-        'orange-200'
-      when 'notice'
-        'blue-200'
       end
     end
   end
