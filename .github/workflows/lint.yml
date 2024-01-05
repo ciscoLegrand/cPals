@@ -1,51 +1,56 @@
-name: Ruby Lint and Autocorrect
+name: 🚀 Ruby Lint & Autocorrect
 
 on: [push, pull_request]
+
+permissions:
+  contents: write
 
 jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - name: 🔄 Checkout code
+      - name: 🔄 Checking out the code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Set up Ruby
+      - name: 💎 Setting up Ruby environment
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2.2'
 
-      - name: Instalar Bundler y dependencias 💻
+      - name: 💻 Installing Bundler and dependencies
         run: |
           gem install bundler
           bundle install
 
-      - name: Chequear ofensas de Rubocop ⚠️
+      - name: ⚠️ Running Rubocop to check for offenses
         run: |
           bundle exec rubocop --parallel --format simple || true
           echo "RUBOCOP_STATUS=$?" >> $GITHUB_ENV
 
-      - name: Autocorregir ofensas de Rubocop
+      - name: 🤖 Auto-correcting Rubocop offenses
         if: ${{ env.RUBOCOP_STATUS }} != 0
         run: |
           bundle exec rubocop -A
           echo "CHANGES_MADE=true" >> $GITHUB_ENV
 
-      - name: Commit Cambios
+      - name: 📝 Committing changes (if any)
         if: ${{ env.CHANGES_MADE }} == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git commit -a -m "Add changes"
-      - name: Push cambios
+          git add .
+          git commit -m "[BOT] 🤖 Autocorrect Rubocop offenses" || true
+
+      - name: 🔼 Pushing changes to the branch
+        if: ${{ env.CHANGES_MADE }} == 'true'
         uses: ad-m/github-push-action@master
         with:
-          branch: ${{ github.head_ref }}
-          github_token: ${{ secrets.BOT_GITHUB_ACTIONS }}
-        
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
 
-      - name: Fallar si se realizaron correcciones
+      - name: ❌ Failing the job if corrections were made
         if: ${{ env.CHANGES_MADE }} == 'true'
         run: |
           exit 1
