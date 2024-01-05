@@ -18,6 +18,7 @@ module UI
       @style[:dropdown]
     end
 
+    # rubocop:disable Metrics/LineLength
     def button_style
       'flex justify-start items-center w-full px-4 py-2 text-sm leading-5 text-left gap-2 hover:bg-slate-900 hover:text-white focus:outline-none focus:bg-gray-700 focus:text-white hover:cursor-pointer rounded-lg'
     end
@@ -33,6 +34,7 @@ module UI
         'border-2 border-indigo-600 rounded-full shadow-lg bg-indigo-800 border-indigo-700 text-white hover:text-red-500'
       end
     end
+    # rubocop:enable Metrics/LineLength
 
     def guest
       User.new(email: 'guest', username: 'Guest')

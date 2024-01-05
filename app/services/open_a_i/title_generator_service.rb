@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/MethodLength
 module OpenAI
   class TitleGeneratorService < BaseService
     def generate_title(text)
@@ -45,3 +46,4 @@ module OpenAI
     end
   end
 end
+# rubocop:enable Metrics/MethodLength

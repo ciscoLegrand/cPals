@@ -5,6 +5,7 @@ module UI
     attr_reader :code, :language
 
     def initialize(code:, language:)
+      super
       @code = code
       @language = language
     end
