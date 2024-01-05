@@ -52,8 +52,7 @@ class ConversationsController < ApplicationController
   def destroy
     @conversation.destroy!
     respond_to do |format|
-      flash.now[:success] =
-        { title: '¡Conversación eliminada!', body: '¡Tu conversación ha sido eliminada exitosamente!' }
+      flash.now[:success] = { title: "¡Conversación eliminada!", body: '¡Tu conversación ha sido eliminada exitosamente!' }
       format.html { redirect_to chatia_path }
       format.turbo_stream
     end

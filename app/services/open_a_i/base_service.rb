@@ -13,7 +13,7 @@ module OpenAI
   class BaseService
     include ClientInitializer
 
-    DEFAULT_MODEL = 'gpt-3.5-turbo'
+    DEFAULT_MODEL = "gpt-3.5-turbo"
     DEFAULT_MAX_TOKENS = 750
     DEFAULT_TEMPERATURE = 0.8
     RESPONSES_PER_MESSAGE = 1

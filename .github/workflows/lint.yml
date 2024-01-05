@@ -26,22 +26,19 @@ jobs:
 
       - name: ⚠️ Running Rubocop to check for offenses
         run: |
-          bundle exec rubocop --parallel --format simple || true
-          echo "RUBOCOP_STATUS=$?" >> $GITHUB_ENV
+          bundle exec rubocop --parallel --format simple || echo "RUBOCOP_STATUS=1" >> $GITHUB_ENV
 
       - name: 🤖 Auto-correcting Rubocop offenses
-        if: ${{ env.RUBOCOP_STATUS }} != 0
+        if: ${{ env.RUBOCOP_STATUS }} == 1
         run: |
           bundle exec rubocop -A
-          echo "CHANGES_MADE=true" >> $GITHUB_ENV
+          git add .
+          git commit -m "[BOT] 🤖 Autocorrect Rubocop offenses" || echo "CHANGES_MADE=true" >> $GITHUB_ENV
 
-      - name: 📝 Committing changes (if any)
+      - name: ⚠️ Re-checking Rubocop offenses
         if: ${{ env.CHANGES_MADE }} == 'true'
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit -m "[BOT] 🤖 Autocorrect Rubocop offenses" || true
+          bundle exec rubocop --parallel --format simple
 
       - name: 🔼 Pushing changes to the branch
         if: ${{ env.CHANGES_MADE }} == 'true'
@@ -49,8 +46,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-
-      - name: ❌ Failing the job if corrections were made
-        if: ${{ env.CHANGES_MADE }} == 'true'
-        run: |
-          exit 1
