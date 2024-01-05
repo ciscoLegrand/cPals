@@ -25,6 +25,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
+          bundle exec rubocop -A
           git add .
           git commit -m "Commit automático realizado por ${{ github.actor }}"
           REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
