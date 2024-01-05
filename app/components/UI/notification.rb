@@ -8,7 +8,7 @@ module UI
       success: {
         icon: 'circle-check',
         color: 'green-500',
-        bg_color: "green-100",
+        bg_color: 'green-100',
         dark_bg_color: 'green-800',
         dark_text_color: 'green-200'
       },
