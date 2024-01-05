@@ -11,51 +11,41 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configurar usuario Git para el bot 🤖
-        run: |
-          git config --global user.name "GitHubBot"
-          git config --global user.email "github-bot@creadix.es"
-
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2.2'
 
-      - name: Cache Bundler gems 💎
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-
       - name: Instalar Bundler y dependencias 💻
         run: |
           gem install bundler
-          bundle config set path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          bundle install
 
       - name: Chequear ofensas de Rubocop ⚠️
         run: |
-          bundle exec rubocop --parallel --format simple || exit 0
-          if [ $? -eq 0 ]; then
-            echo "RuboCop: No se detectaron ofensas. Todo bien 👍"
-            exit 0
-          else
-            echo "RuboCop: Ofensas detectadas, procediendo a autocorrección..."
-          fi
-  
-      - name: Autocorregir ofensas de Rubocop y commit 📝
-        if: always()
-        env:
-          GITHUB_TOKEN: ${{ secrets.BOT_GITHUB }}
+          bundle exec rubocop --parallel --format simple || true
+          echo "RUBOCOP_STATUS=$?" >> $GITHUB_ENV
+
+      - name: Autocorregir ofensas de Rubocop
+        if: ${{ env.RUBOCOP_STATUS }} != 0
         run: |
           bundle exec rubocop -A
-          git add .
-          git commit -m "Commit automático realizado por ${{ github.actor }}" || echo "No hay cambios para hacer commit."
-          BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
-          REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
-          git push "${REPO_URL}" "${BRANCH_NAME}"
-          echo "Se han autocorregido ofensas y se han aplicado los cambios al repositorio. El workflow fallará para indicar la corrección de ofensas."
-          exit 1
+          echo "CHANGES_MADE=true" >> $GITHUB_ENV
 
+      - name: Commit Cambios
+        if: ${{ env.CHANGES_MADE }} == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "Add changes"
+      - name: Push cambios
+        uses: ad-m/github-push-action@master
+        with:
+          branch: ${{ github.head_ref }}
+          github_token: ${{ secrets.BOT_GITHUB_ACTIONS }}
+        
+
+      - name: Fallar si se realizaron correcciones
+        if: ${{ env.CHANGES_MADE }} == 'true'
+        run: |
+          exit 1

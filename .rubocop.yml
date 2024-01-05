@@ -12,6 +12,7 @@ AllCops:
     - 'storage/*'
     - 'tmp/*'
     - 'vendor/*'
+    - 'vendor/**/*'
     - Gemfile
 
   Include:
