@@ -1,9 +1,9 @@
 <section class="w-full">
   <div class="container mx-auto flex flex-col justify-between items-between h-custom">
-    <ul role="list" class="w-4/5 mx-auto overflow-y-auto flex flex-col-reverse px-4">
+    <ul role="list" class="w-4/5 mx-auto overflow-y-auto flex flex-col-reverse px-4 mb-4">
       <%= turbo_stream_from "#{dom_id(@conversation)}_interactions" %>
       <div id="<%= dom_id(@conversation) %>_interactions">
-        <%= render @conversation.interactions %>
+        <%= render @conversation.interactions.order(created_at: :asc) %>
       </div>
     </ul>
 

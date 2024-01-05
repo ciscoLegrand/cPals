@@ -1,0 +1,67 @@
+name: 🚀 Ruby Lint & Autocorrect
+
+on: [pull_request]
+
+permissions:
+  contents: write
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔄 Checking out the code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: 💎 Setting up Ruby environment
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.2'
+
+      - name: 💻 Installing Bundler and dependencies
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: ⚠️ Running Rubocop to check for offenses
+        run: |
+          bundle exec rubocop --parallel --format simple || echo "RUBOCOP_STATUS=1" >> $GITHUB_ENV
+
+      - name: 🤖 Auto-correcting Rubocop offenses
+        if: ${{ env.RUBOCOP_STATUS }} == 1
+        run: |
+          bundle exec rubocop -A
+          git add .
+          git commit -m "[BOT] 🤖 Autocorrect Rubocop offenses" || echo "CHANGES_MADE=true" >> $GITHUB_ENV
+
+      - name: ⚠️ Re-checking Rubocop offenses
+        if: ${{ env.CHANGES_MADE }} == 'true'
+        run: |
+          bundle exec rubocop --parallel --format simple
+
+      - name: 🔼 Pushing changes to the branch
+        if: ${{ env.CHANGES_MADE }} == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref }}
+
+  automerge:
+    needs: [rubocop]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener número de PR y nombre de rama
+        id: pr_info
+        run: |
+          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "::set-output name=pr_number::${PR_NUMBER}"
+          echo "::set-output name=branch_name::${BRANCH_NAME}"
+
+      - name: Merge Pull Request
+        uses: pascalgn/automerge-action@v0.14.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          mergeMethod: merge
+          commitMessageTemplate: "[BOT] 🤖 Auto-merge PR #${{ steps.pr_info.outputs.pr_number }} in ${branch_name}}"

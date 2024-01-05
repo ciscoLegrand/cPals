@@ -1,0 +1,11 @@
+<%= form_with(model: @conversation, class: "w-full flex flex-col") do |form| %>
+  <%= form.hidden_field :ip_address, value: request.remote_ip %>
+  <%= form.hidden_field :model, value: 'gpt-3.5-turbo', data: { dropdown_target: 'hiddenModel'} %>
+  <%= form.hidden_field :description, value: 'Haz un brainstorming para generar ideas para un nuevo producto digital.' %>
+  <button type="submit" class="col-span-1 px-4 py-2 text-gray-200 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer bg-gray-900 hover:bg-gray-700 shadow shadow-gray-900">
+    <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🏳️‍🌈 Creatividad</h3>
+    <span class="w-full text-gray-400 text-sm">
+      Haz un brainstorming para generar una lista de 10 ideas para un nuevo producto digital.
+    </span>
+  </button>
+<% end %>

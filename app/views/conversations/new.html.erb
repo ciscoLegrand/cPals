@@ -1,36 +1,32 @@
-
-<%= turbo_frame_tag 'new_conversation', class: 'container mx-auto' do %>
-  <div class="container mx-auto flex flex-col justify-end items-between h-custom gap-12">
-    <div class="w-4/5 mx-auto grid grid-cols-2 gap-8">
-      <div class="col-span-1 px-4 py-2 text-gray-200 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer bg-gray-900 hover:bg-gray-700 shadow shadow-gray-900">
-        <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
-        <span class="w-full text-gray-400 text-sm truncate">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat.
-        </span>
+<%= turbo_frame_tag 'new_conversation', class: 'w-full mx-auto' do %>
+  <div class="relative z-0 flex w-full overflow-hidden">
+    <%= render 'conversations/aside' %>
+    <main class="w-5/6 relative flex h-custom overflow-y-scroll flex-1 flex-col items-center overflow-hidden bg-slate-950 my-12 mx-8 rounded-xl" data-controller="dropdown">
+      <div  data-dropdown-open-value="false"
+            class="absolute -top-4 left-4 rounded-xl flex flex-col justify-start items-center px-4 my-8" >
+        <button role="button" 
+                tabindex=0 
+                data-dropdown-target="openButton"
+                data-action="click->dropdown#open"
+                class="flex justify-start items-center w-full px-4 py-2 text-sm leading-5 text-left gap-2 bg-slate-800 hover:bg-slate-700 hover:text-white focus:outline-none focus:bg-gray-700 focus:text-white hover:cursor-pointer rounded-lg shadow shadow-slate-700">
+          <span data-dropdown-target="model" class="text-xl text-gray-300 font-bold">gpt-3.5-turbo</span>
+        </button>
+        <dropdown data-dropdown-target="dropdownContent"
+                  class="w-full xl:container px-12 py-8 grid grid-cols-2 2xl:grid-cols-6 gap-4 z-40 hidden shadow-lg shadow-slate-700 rounded-lg bg-slate-900 transition-opacity duration-300 ease-in-out">
+            <% @models.each do |model| %>
+              <div class="flex items-center gap-3 shadow rounded-md border border-gray-200 outline-none px-2 py-2  w-full bg-gray-400 hover:bg-gray-200">
+                <input type="radio" id="<%= model['id'] %>"
+                      name="model" value="<%= model['id'] %>"
+                      data-action="click->dropdown#closeAndChangeModel"
+                      class="w-4 h-4 text-slate-800 bg-white border-slate-800 rounded focus:ring-slate-800 focus:ring-2 cursor-pointer focus:duration-500">
+                <label for="<%= model['id'] %>" data-dropdown-model-value="<%= model['id']%>" class="w-full px-4 py-1 rounded-lg cursor-pointer"><%= model['id'] %></label>
+              </div>
+            <% end %>
+        </dropdown>
       </div>
-      <div class="col-span-1 px-4 py-2 text-gray-200 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer bg-gray-900 hover:bg-gray-700 shadow shadow-gray-900">
-        <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
-        <span class="w-full text-gray-400 text-sm truncate">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat, recusandae alias ratione tempora eligendi numquam dicta
-        </span>
+      <div class="flex flex-col justify-end items-end gap-8">
+        <%= render "form", conversation: @conversation %>
       </div>
-      <div class="col-span-1 px-4 py-2 text-gray-200 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer bg-gray-900 hover:bg-gray-700 shadow shadow-gray-900">
-        <div class="w-full flex justify-between items-center gap-4">
-          <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
-        </div>
-        <span class="w-full text-gray-400 text-sm truncate">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat, recusandae alias ratione tempora 
-        </span>
-      </div>
-      <div class="col-span-1 px-4 py-2 text-gray-200 rounded-lg flex flex-col justify-center items-start hover:cursor-pointer bg-gray-900 hover:bg-gray-700 shadow shadow-gray-900">
-        <h3 class="w-full font-semibold px-4 py-2 text-gray-200">🍌 Lorem ipsum</h3>
-        <span class="w-full text-gray-400 text-sm truncate">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur dolorum nobis dolor quam fugiat, i
-        </span>
-      </div>
-    </div>
-    <div class="flex flex-col justify-end items-end gap-8">
-      <%= render "form", conversation: Conversation.new %>
-    </div>
+    </main>
   </div>
 <% end %>
