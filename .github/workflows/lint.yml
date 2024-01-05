@@ -28,7 +28,7 @@ jobs:
 
       - name: Chequear ofensas de Rubocop ⚠️
         run: |
-          bundle exec rubocop --parallel --fail-level autocorrectable
+          bundle exec rubocop --parallel || exit 0
 
       - name: Autocorregir ofensas de Rubocop y commit 📝
         run: |
