@@ -21,21 +21,41 @@ jobs:
         with:
           ruby-version: '3.2.2'
 
+      - name: Cache Bundler gems 💎
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
       - name: Instalar Bundler y dependencias 💻
         run: |
           gem install bundler
-          bundle install
+          bundle config set path vendor/bundle
+          bundle install --jobs 4 --retry 3
 
       - name: Chequear ofensas de Rubocop ⚠️
         run: |
-          bundle exec rubocop --parallel || exit 0
-
+          bundle exec rubocop --parallel --format simple || exit 0
+          if [ $? -eq 0 ]; then
+            echo "RuboCop: No se detectaron ofensas. Todo bien 👍"
+            exit 0
+          else
+            echo "RuboCop: Ofensas detectadas, procediendo a autocorrección..."
+          fi
+  
       - name: Autocorregir ofensas de Rubocop y commit 📝
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_GITHUB }}
         run: |
           bundle exec rubocop -A
           git add .
           git commit -m "Commit automático realizado por ${{ github.actor }}" || echo "No hay cambios para hacer commit."
+          BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
           REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
-          git push "${REPO_URL}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          git push "${REPO_URL}" "${BRANCH_NAME}"
+          echo "Se han autocorregido ofensas y se han aplicado los cambios al repositorio. El workflow fallará para indicar la corrección de ofensas."
+          exit 1
+
