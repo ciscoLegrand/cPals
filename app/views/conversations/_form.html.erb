@@ -1,20 +1,29 @@
-<%= turbo_frame_tag "#{dom_id(@conversation)}_conversation_form", class: 'container mx-auto bg-slate-950 py-4' do %>
-  <%= form_with(model: @conversation, class: "w-full") do |form| %>
-
-    <%= form.hidden_field :ip_address, value: request.remote_ip %>
-    <%= form.hidden_field :model, value: 'gpt-4', data: { dropdown_target: 'hiddenModel'} %>
-
-    <div class="w-4/5 mx-auto flex flex-col gap-4 relative">
-      <%= form.text_area :description, 
-              placeholder: 'Message cPal...',
-              class: "block shadow rounded-xl border border-gray-600 outline-none py-3 px-5 w-full bg-transparent resize-none focus:ring-amber-700 placeholder-black/50 dark:placeholder-white/50 focus:text-gray-200 pr-20 text-gray-400" %>
-      <%= button_tag inline_svg_tag('icons/arrow-narrow-up.svg', class: 'w-6 h-6 stroke-gray-800 stroke-2'),
-                    type: :submit, 
-                    class: 'absolute top-2 right-4 border-0 rounded-lg p-1 bg-slate-600 inline-block font-medium cursor-pointer border-2 border-gray-300' %>
-      <span class="text-sm text-gray-500 text-center w-full">
-        ChatGPT can make mistakes. Consider checking important information.
-      </span>
+<%= turbo_frame_tag "#{dom_id(@conversation)}_conversation_form", class: 'container mx-auto bg-slate-950 py-4 h-custom' do %>
+  <div class="container mx-auto flex flex-col justify-end items-between gap-12 h-full">
+    <div id="recomendations" class="w-full mx-auto grid grid-cols-2 gap-12">
+      <%= render 'conversations/initial_conversation/creativity' %>
+      <%= render 'conversations/initial_conversation/creativity' %>
+      <%= render 'conversations/initial_conversation/creativity' %>
+      <%= render 'conversations/initial_conversation/creativity' %>
     </div>
-  <% end %>
+  
+    <%= form_with(model: @conversation, class: "w-full") do |form| %>
 
+      <%= form.hidden_field :ip_address, value: request.remote_ip %>
+      <%= form.hidden_field :model, value: 'gpt-3.5-turbo', data: { dropdown_target: 'hiddenModel'} %>
+
+
+      <div class="w-full mx-auto flex flex-col gap-4 relative">
+        <%= form.text_area :description, 
+                placeholder: 'Message cPal...',
+                class: "block shadow rounded-xl border border-gray-600 outline-none py-3 px-5 w-full bg-transparent resize-none focus:ring-amber-700 placeholder-black/50 dark:placeholder-white/50 focus:text-gray-200 pr-20 text-gray-400" %>
+        <%= button_tag inline_svg_tag('icons/arrow-narrow-up.svg', class: 'w-6 h-6 stroke-gray-800 stroke-2'),
+                      type: :submit, 
+                      class: 'absolute top-2 right-4 border-0 rounded-lg p-1 bg-slate-600 inline-block font-medium cursor-pointer border-2 border-gray-300' %>
+        <span class="text-sm text-gray-500 text-center w-full">
+          ChatGPT can make mistakes. Consider checking important information.
+        </span>
+      </div>
+    <% end %>
+  </div>
 <% end %>

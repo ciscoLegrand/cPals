@@ -1,0 +1,8 @@
+<div class="relative z-0 flex h-full w-full overflow-hidden">
+  <%= render 'conversations/aside' %>
+  <main class="w-5/6 relative flex h-custom overflow-y-scroll flex-1 flex-col items-center overflow-hidden bg-slate-950 my-12 mx-8 rounded-xl" data-controller="dropdown">
+    <%= turbo_frame_tag dom_id(@conversation), class: 'container mx-auto' do %>
+      <%= render @conversation %>
+    <% end %>
+  </main>
+</div>

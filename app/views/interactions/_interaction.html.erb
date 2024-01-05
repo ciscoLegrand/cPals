@@ -12,13 +12,26 @@
       <%= interaction.content %>
     </div>
   <% else %>
-    <div class="w-full px-6 py-3 rounded-xl my-4 text-gray-400">
-      <div class="flex items-center gap-8 mb-4 px-4 py-1 text-gray-300">
-        <%= inline_svg_tag('icons/terminal/chat-gpt.svg', class: 'w-6 h-6 flex items-center justify-center overflow-hidden text-sm bg-gray-300 text-gray-900 p-1 rounded-full')%>
-        <span class="flex font-bold text-sm">chatGPT</span>
-        <time><%= time_ago_in_words(interaction.created_at) %></time>
+    <div class="w-full px-6 py-3 rounded-xl my-4 text-gray-400" data-controller="copy">
+      <div class="w-full flex justify-between items-center gap-8 mb-4 px-4 py-1 text-gray-300">
+        <div class="flex justify-start items-center gap-6">
+          <%= inline_svg_tag('icons/terminal/chat-gpt.svg', class: 'w-6 h-6 flex items-center justify-center overflow-hidden text-sm bg-gray-300 text-gray-900 p-1 rounded-full')%>
+          <span class="flex font-bold text-sm"><%= interaction.conversation.model %></span>
+        </div>
+        <div class="flex justify-end items-center gap-6">
+          <time><%= time_ago_in_words(interaction.created_at) %></time>
+          <div class="flex justify-end items-center gap-6">
+            <span class="hidden bg-green-200 rounded-xl px-4 py-1 text-sm" data-copy-target="message"></span>
+            <span data-action="click->copy#copy"
+                  class="border border-gray-700 bg-gray-500 p-2 flex justify-center items-center rounded-full hover:cursor-pointer hover:bg-gray-700">
+              <%= inline_svg_tag('icons/terminal/copy.svg', class: 'w-5 h-5 fill-2 stroke-2 stroke-gray-900') %>
+            </span>
+          </div>
+        </div>
       </div>
-      <%= interaction.answer_text_to_html(self) %>
+      <div data-copy-target="source">
+        <%= interaction.answer_text_to_html(self) %>
+      </div>
     </div>
   <% end %>
 </div>

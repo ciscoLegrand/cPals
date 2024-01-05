@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
@@ -25,7 +27,7 @@ RSpec.describe User, type: :model do
     user = FactoryBot.build(:user, username: nil)
     expect(user).to be_valid
 
-    existing_user = FactoryBot.create(:user, username: 'testuser')
+    FactoryBot.create(:user, username: 'testuser')
     user_with_same_username = FactoryBot.build(:user, username: 'testuser')
     expect(user_with_same_username).not_to be_valid
     expect(user_with_same_username.errors[:username]).to include(I18n.t('errors.messages.taken'))
@@ -44,7 +46,7 @@ RSpec.describe User, type: :model do
 
   # Enum role
   it 'has user and admin roles' do
-    expect(User.roles.keys).to match_array(['user', 'admin'])
+    expect(User.roles.keys).to match_array(%w[user admin])
   end
 
   it 'has user and admin validate roles' do
@@ -97,9 +99,9 @@ RSpec.describe User, type: :model do
 
   it 'sends confirmation instructions' do
     user = FactoryBot.create(:user)
-    expect {
+    expect do
       user.send_confirmation_instructions
-    }.to change {
+    end.to change {
       ActionMailer::Base.deliveries.count
     }.by(1)
   end
@@ -111,5 +113,4 @@ RSpec.describe User, type: :model do
     user.update(sign_in_count: user.sign_in_count + 1)
     expect(user.sign_in_count).to eq(1)
   end
-
 end

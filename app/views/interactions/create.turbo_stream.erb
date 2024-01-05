@@ -1,6 +1,7 @@
-<%= turbo_stream.replace "#{dom_id(@interaction.conversation)}_interactions" do %>
+<%= turbo_stream.append "#{dom_id(@interaction.conversation)}_interactions" do %>
   <%= render "interaction", interaction: @interaction, scroll_to: true %>
 <% end %>
 <%= turbo_stream.replace "#{dom_id(@interaction.conversation)}_interaction_form" do %>
   <%= render "form", conversation: @interaction.conversation %>
 <% end %>
+
