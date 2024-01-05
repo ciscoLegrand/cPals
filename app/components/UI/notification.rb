@@ -4,7 +4,7 @@ module UI
   class Notification < ViewComponent::Base
     attr_reader :data, :type, :assets
 
-    NOTIFICATION_TYPES = [
+    NOTIFICATION_TYPES = {
       success: {
         icon: 'circle-check',
         color: 'green-500',
@@ -33,14 +33,14 @@ module UI
         dark_bg_color: 'blue-800',
         dark_text_color: 'blue-200'
       }
-    ].freeze
+    }.freeze
 
     def initialize(type:, data:)
       super
       @data = prepare_data(data)
       @data[:timeout] ||= 50_000
       @type = type
-      @assets = NOTIFICATION_TYPES[type]
+      @assets = NOTIFICATION_TYPES[type.to_sym]
     end
 
     def prepare_data(data)
