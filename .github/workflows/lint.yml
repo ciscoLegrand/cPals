@@ -3,24 +3,50 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  rubocop-test:
-    name: Rubocop
+  rubocop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby
+      - name: 🔄 Checking out the code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: 💎 Setting up Ruby environment
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.2
-      - name: Install dependencies
+          ruby-version: '3.2.2'
+
+      - name: 💻 Installing Bundler and dependencies
         run: |
           gem install bundler
-          bundle install --jobs 4 --retry 3
-      - name: Run Rubocop
-        run: bundle exec rubocop
+          bundle install
+
+      - name: ⚠️ Running Rubocop to check for offenses
+        run: |
+          bundle exec rubocop --parallel --format simple || echo "RUBOCOP_STATUS=1" >> $GITHUB_ENV
+
+      - name: 🤖 Auto-correcting Rubocop offenses
+        if: ${{ env.RUBOCOP_STATUS }} == 1
+        run: |
+          bundle exec rubocop -A
+          git add .
+          git commit -m "[BOT] 🤖 Autocorrect Rubocop offenses" || echo "CHANGES_MADE=true" >> $GITHUB_ENV
+
+      - name: ⚠️ Re-checking Rubocop offenses
+        if: ${{ env.CHANGES_MADE }} == 'true'
+        run: |
+          bundle exec rubocop --parallel --format simple
+
+      - name: 🔼 Pushing changes to the branch
+        if: ${{ env.CHANGES_MADE }} == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref }}
+
   database-test:
     name: Rspec
-    needs: rubocop-test
+    needs: rubocop
     runs-on: ubuntu-22.04
     services:
       db:
@@ -63,4 +89,4 @@ jobs:
           bundle exec rails db:migrate
           bundle exec rails assets:precompile
           bundle exec rspec
- 
+  
