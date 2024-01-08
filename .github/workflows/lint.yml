@@ -115,12 +115,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Update Changelog
-        run: |
-          echo "Updating changelog for ${GITHUB_REF#refs/heads/}" >> changelog.md
-          git add changelog.log
-          git commit -m "Update changelog for ${GITHUB_REF#refs/heads/}"
-
       - name: Push Changes
         run: |
           git push origin HEAD:${GITHUB_REF#refs/heads/}
