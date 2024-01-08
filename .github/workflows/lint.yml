@@ -116,5 +116,5 @@ jobs:
           title: "Automated PR for Code Changes"
           body: "This is an auto-generated Pull Request."
           base: develop
-          branch: "automated-changes-${{ github.run_id }}"
+          branch: "${{ steps.extract_branch.outputs.branch }}"
           delete-branch: false
