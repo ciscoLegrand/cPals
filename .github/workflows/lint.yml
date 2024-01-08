@@ -94,4 +94,21 @@ jobs:
           bundle exec rails db:migrate
           bundle exec rails assets:precompile
           bundle exec rspec
-          
+
+  create-pr:
+    needs: [rubocop, database-test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && success()
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "[AUTOMATED] Auto-generated Pull Request"
+          title: "Automated PR for Code Changes"
+          body: "This is an auto-generated Pull Request."
+          branch: "automated-changes-${{ github.run_id }}"
+          delete-branch: true
