@@ -1,6 +1,9 @@
-name: CI
+name: 🚀 Ruby Lint, Autocorrect & Test
 
 on: [push, pull_request]
+
+permissions:
+  contents: write
 
 jobs:
   rubocop:
@@ -44,10 +47,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.head_ref }}
 
+
   database-test:
     name: Rspec
     needs: rubocop
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     services:
       db:
         image: postgres:13.4
@@ -70,7 +74,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.1.2
+          ruby-version: 3.2.2
       - name: Build and test with Rake
         env:
           RAILS_ENV: test
@@ -89,4 +93,4 @@ jobs:
           bundle exec rails db:migrate
           bundle exec rails assets:precompile
           bundle exec rspec
-  
+          
