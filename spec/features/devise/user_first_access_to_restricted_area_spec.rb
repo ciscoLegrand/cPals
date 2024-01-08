@@ -62,7 +62,7 @@ RSpec.feature 'User Access to Restricted Area', type: :feature do
 
     # Paso 12: Verificar que se ha redirigido al usuario a la página restringida
     expect(current_path).to eq(chatia_path)
-    expect(page).to have_content('ChatGPT 4')
+    expect(page).to have_content('gpt-3.5-turbo')
   end
 end
 # rubocop:enable Metrics/BlockLength
