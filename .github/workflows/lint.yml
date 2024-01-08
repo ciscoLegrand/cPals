@@ -1,4 +1,4 @@
-name: 🚀 Ruby Lint & Autocorrect
+name: 🚀 Ruby CI/CD Pipeline
 
 on: [push, pull_request]
 
@@ -11,15 +11,12 @@ jobs:
     steps:
       - name: 🔄 Checking out the code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: 💎 Setting up Ruby environment
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2.2'
+          ruby-version: '3.2.2' # Asegúrate de usar la versión de Ruby correcta
 
-      # Cache Bundler dependencies
       - name: 🗃️ Cache Bundler dependencies
         uses: actions/cache@v2
         with:
@@ -30,13 +27,12 @@ jobs:
 
       - name: 💻 Installing Bundler and dependencies
         run: |
-          gem install bundler
+          gem install bundler -N
           bundle config set --local path 'vendor/bundle'
-          bundle install
+          bundle install --jobs 4 --retry 3
 
       - name: ⚠️ Running Rubocop to check for offenses
-        run: |
-          bundle exec rubocop --parallel --format simple || echo "RUBOCOP_STATUS=1" >> $GITHUB_ENV
+        run: bundle exec rubocop --parallel --format simple || echo "RUBOCOP_STATUS=1" >> $GITHUB_ENV
 
       - name: 🤖 Auto-correcting Rubocop offenses
         if: ${{ env.RUBOCOP_STATUS }} == 1
@@ -47,8 +43,7 @@ jobs:
 
       - name: ⚠️ Re-checking Rubocop offenses
         if: ${{ env.CHANGES_MADE }} == 'true'
-        run: |
-          bundle exec rubocop --parallel --format simple
+        run: bundle exec rubocop --parallel --format simple
 
       - name: 🔼 Pushing changes to the branch
         if: ${{ env.CHANGES_MADE }} == 'true'
@@ -59,17 +54,14 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: setup
     steps:
       - name: 🔄 Checking out the code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: 💎 Setting up Ruby environment
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2.2'
+          ruby-version: '3.2.2' # Asegúrate de usar la misma versión de Ruby
 
       - name: 🗃️ Cache Bundler dependencies
         uses: actions/cache@v2
@@ -81,29 +73,9 @@ jobs:
 
       - name: 💻 Installing Bundler and dependencies
         run: |
-          gem install bundler
+          gem install bundler -N
           bundle config set --local path 'vendor/bundle'
-          bundle install
+          bundle install --jobs 4 --retry 3
 
       - name: 🧪 Run Tests
-        run: |
-          bundle exec rspec
-
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      cache-key: ${{ steps.cache-keys.outputs.key }}
-    steps:
-      - name: 🔄 Checking out the code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: 💎 Setting up Ruby environment
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2.2'
-
-      - name: 🗃️ Generate Cache Key
-        id: cache-keys
-        run: echo "::set-output name=key::$(echo ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }})"
+        run: bundle exec rspec
