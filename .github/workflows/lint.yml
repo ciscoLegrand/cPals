@@ -99,6 +99,8 @@ jobs:
     needs: [rubocop, database-test]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref != 'refs/heads/develop'
+    env:
+      ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}  # Utilizar la variable de entorno
     steps:
       - name: Check out code
         uses: actions/checkout@v2
