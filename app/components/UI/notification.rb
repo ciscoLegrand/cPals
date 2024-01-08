@@ -29,7 +29,7 @@ module UI
       notice: {
         icon: 'info-square-rounded',
         color: 'blue-500',
-        bg_color: 'blue-100',
+        bg_color: 'blue-200',
         dark_bg_color: 'blue-800',
         dark_text_color: 'blue-200'
       }
