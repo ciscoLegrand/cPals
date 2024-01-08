@@ -40,6 +40,8 @@ jobs:
         if: ${{ env.RUBOCOP_STATUS == '1' }}
         run: |
           bundle exec rubocop -A
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add .
           git commit -m "[BOT] 🤖 Autocorrect Rubocop offenses"
 
