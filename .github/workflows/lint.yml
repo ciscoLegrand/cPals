@@ -14,6 +14,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Cache Bundler Install
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
       - name: 💎 Setting up Ruby environment
         uses: ruby/setup-ruby@v1
         with:
@@ -22,31 +30,20 @@ jobs:
       - name: 💻 Installing Bundler and dependencies
         run: |
           gem install bundler
-          bundle install
+          bundle install --jobs 4 --retry 3
 
       - name: ⚠️ Running Rubocop to check for offenses
         run: |
           bundle exec rubocop --parallel --format simple || echo "RUBOCOP_STATUS=1" >> $GITHUB_ENV
 
       - name: 🤖 Auto-correcting Rubocop offenses
-        if: ${{ env.RUBOCOP_STATUS }} == 1
+        if: ${{ env.RUBOCOP_STATUS == '1' }}
         run: |
           bundle exec rubocop -A
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add .
-          git commit -m "[BOT] 🤖 Autocorrect Rubocop offenses" || echo "CHANGES_MADE=true" >> $GITHUB_ENV
-
-      - name: ⚠️ Re-checking Rubocop offenses
-        if: ${{ env.CHANGES_MADE }} == 'true'
-        run: |
-          bundle exec rubocop --parallel --format simple
-
-      - name: 🔼 Pushing changes to the branch
-        if: ${{ env.CHANGES_MADE }} == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.head_ref }}
-
+          git commit -m "[BOT] 🤖 Autocorrect Rubocop offenses"
 
   database-test:
     name: Rspec
@@ -69,12 +66,25 @@ jobs:
           - 6379:6379
         options: >-
           --entrypoint redis-server
+
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Cache Bundler Install
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
       - name: 🧰 Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2.2
+
       - name: 🧪 Build and test with Rake
         env:
           RAILS_ENV: test
@@ -88,10 +98,40 @@ jobs:
         run: |
           sudo apt-get -yqq install libpq-dev
           cp config/database.yml.ci.github-actions config/database.yml
-          gem install bundler
           bundle install --jobs 4 --retry 3
           bundle exec rails db:create
           bundle exec rails db:migrate
           bundle exec rails assets:precompile
           bundle exec rspec
 
+  create-pr:
+    needs: [rubocop, database-test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref != 'refs/heads/develop'
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Push Changes
+        run: |
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
+
+      - name: 🛩️ Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "[BOT] 🤖 Automated PR for ${{ github.ref_name }} after passing all jobs"
+          title: "[BOT] 🤖 Automated PR for Code Changes"
+          body: |
+            This is an auto-generated Pull Request.
+
+            Update report
+            - Automated changes by create-pull-request GitHub action
+          base: develop
+          branch: ${{ github.ref_name }}
+          labels: automated-pr
+          assignees: ciscoLegrand
+          reviewers: ciscoLegrand
