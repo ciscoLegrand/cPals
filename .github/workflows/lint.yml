@@ -95,29 +95,35 @@ jobs:
           bundle exec rails assets:precompile
           bundle exec rspec
 
-  create-pr:
-    needs: [rubocop, database-test]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref != 'refs/heads/develop'
-    env:
-      ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}  # Utilizar la variable de entorno
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
+  # create-pr:
+  #   needs: [rubocop, database-test]
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'push' && github.ref != 'refs/heads/develop'
+  #   env:
+  #     ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}  # Utilizar la variable de entorno
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@v2
   
-      - name: Extract branch name
-        id: extract_branch
-        shell: bash
-        run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
+  #     - name: Extract branch name
+  #       id: extract_branch
+  #       shell: bash
+  #       run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
   
-      - name: 🛩️ Create Pull Request
-        uses: peter-evans/create-pull-request@v4
-        with:
-            commit-message: Testing auto create PR from Github Actions - ${{ steps.extract_branch.outputs.branch }}
-            title: TESTS - ${{ steps.extract_branch.outputs.branch }}
-            body: test body - ${{ steps.extract_branch.outputs.branch }} - ${{ env.ACTIONS_STEP_DEBUG }} - ${{ github.event_name }} - ${{ github.ref }}
-            base: develop
-            labels: automated-pr
-            branch: ci-w-test
-            delete-branch: true
+  #     - name: 🛩️ Create Pull Request
+  #       uses: peter-evans/create-pull-request@v4
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         commit-message: "[BOT] 🤖 Automated PR for ${{ steps.extract_branch.outputs.branch }} after passing all jobs"
+  #         title: "[BOT] 🤖 Automated PR for Code Changes"
+  #         body: |
+  #           This is an auto-generated Pull Request.
+  
+  #           Update report
+  #           - Automated changes by create-pull-request GitHub action
+  #         base: develop
+  #         labels: automated-pr, Clouds & Regions
+  #         branch: ${{ steps.extract_branch.outputs.branch }}
+  #         delete-branch: false
+          
           
