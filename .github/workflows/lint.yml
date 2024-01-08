@@ -111,22 +111,13 @@ jobs:
         run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
   
       - name: 🛩️ Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "[BOT] 🤖 Automated PR for ${{ steps.extract_branch.outputs.branch }} after passing all jobs"
-          title: "[BOT] 🤖 Automated PR for Code Changes"
-          body: |
-            This is an auto-generated Pull Request.
-  
-            Update report
-            - Automated changes by create-pull-request GitHub action
-          base: develop
-          branch: ${{ steps.extract_branch.outputs.branch }}
-          delete-branch: false
-          labels: |
-            automated PR
-            code changes
-          assignees: ciscoLegrand
-          reviewers: ciscoLegrand
+            commit-message: Testing auto create PR from Github Actions - ${{ steps.extract_branch.outputs.branch }}
+            title: TESTS - ${{ steps.extract_branch.outputs.branch }}
+            body: test body - ${{ steps.extract_branch.outputs.branch }} - ${{ env.ACTIONS_STEP_DEBUG }} - ${{ github.event_name }} - ${{ github.ref }}
+            base: develop
+            labels: automated-pr
+            branch: ci-w-test
+            delete-branch: true
           
