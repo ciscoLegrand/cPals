@@ -71,11 +71,11 @@ jobs:
           --entrypoint redis-server
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Ruby
+      - name: 🧰 Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2.2
-      - name: Build and test with Rake
+      - name: 🧪 Build and test with Rake
         env:
           RAILS_ENV: test
           POSTGRES_HOST: localhost
@@ -103,13 +103,24 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+      - name: 🛩️ Create Pull Request ${{ github.head_ref }}
+        uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "[BOT] 🤖 Automated PR for ${GITHUB_REF#refs/heads/} after passing all jobs"
+          commit-message: "[BOT] 🤖 Automated PR for ${{ github.head_ref }} after passing all jobs"
           title: "[BOT] 🤖 Automated PR for Code Changes"
-          body: "This is an auto-generated Pull Request."
+          body: |
+            This is an auto-generated Pull Request.
+
+            Update report
+            - Automated changes by create-pull-request GitHub action
           base: develop
-          branch: "${GITHUB_REF#refs/heads/}"
+          branch: "${{ github.head_ref }}"
           delete-branch: false
+          labels: |
+            automated PR
+            code changes
+          assignees: ciscoLegrand
+          reviewers: ciscoLegrand
+          milestone: 1
+          draft: false
