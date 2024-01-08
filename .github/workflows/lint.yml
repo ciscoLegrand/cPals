@@ -98,17 +98,23 @@ jobs:
   create-pr:
     needs: [rubocop, database-test]
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && success()
+    if: github.event_name == 'push' && github.ref != 'refs/heads/development'
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+
+      - name: Extract branch name
+        id: extract_branch
+        shell: bash
+        run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "[AUTOMATED] Auto-generated Pull Request"
+          commit-message: "[BOT] 🤖 Automated PR ${{ steps.extract_branch.outputs.branch }} created after passed ✅ all jobs"
           title: "Automated PR for Code Changes"
           body: "This is an auto-generated Pull Request."
+          base: develop
           branch: "automated-changes-${{ github.run_id }}"
-          delete-branch: true
+          delete-branch: false
