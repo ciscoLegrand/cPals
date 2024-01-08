@@ -95,36 +95,3 @@ jobs:
           bundle exec rails assets:precompile
           bundle exec rspec
 
-  create-pr:
-    needs: [rubocop, database-test]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref != 'refs/heads/develop'
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-  
-      - name: Extract branch name
-        id: extract_branch
-        shell: bash
-        run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
-  
-      - name: 🛩️ Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "[BOT] 🤖 Automated PR for ${{ steps.extract_branch.outputs.branch }} after passing all jobs"
-          title: "[BOT] 🤖 Automated PR for Code Changes"
-          body: |
-            This is an auto-generated Pull Request.
-  
-            Update report
-            - Automated changes by create-pull-request GitHub action
-          base: develop
-          branch: ${{ steps.extract_branch.outputs.branch }}
-          delete-branch: false
-          labels: |
-            automated PR
-            code changes
-          assignees: ciscoLegrand
-          reviewers: ciscoLegrand
-          
