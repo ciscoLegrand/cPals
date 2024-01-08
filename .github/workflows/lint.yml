@@ -40,12 +40,17 @@ jobs:
         run: |
           bundle exec rubocop --parallel --format simple
 
+      - name: Extract branch name
+        id: extract_branch
+        shell: bash
+        run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
+
       - name: 🔼 Pushing changes to the branch
         if: ${{ env.CHANGES_MADE }} == 'true'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref_name }}
+          branch: ${{ steps.extract_branch.outputs.branch }}
 
 
   database-test:
