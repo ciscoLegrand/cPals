@@ -19,9 +19,19 @@ jobs:
         with:
           ruby-version: '3.2.2'
 
+      # Cache Bundler dependencies
+      - name: 🗃️ Cache Bundler dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
       - name: 💻 Installing Bundler and dependencies
         run: |
           gem install bundler
+          bundle config set --local path 'vendor/bundle'
           bundle install
 
       - name: ⚠️ Running Rubocop to check for offenses
@@ -46,22 +56,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.head_ref }}
-
-  automerge:
-    needs: [rubocop]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Obtener número de PR y nombre de rama
-        id: pr_info
-        run: |
-          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          echo "::set-output name=pr_number::${PR_NUMBER}"
-          echo "::set-output name=branch_name::${BRANCH_NAME}"
-
-      - name: Merge Pull Request
-        uses: pascalgn/automerge-action@v0.14.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          mergeMethod: merge
-          commitMessageTemplate: "[BOT] 🤖 Auto-merge PR #${{ steps.pr_info.outputs.pr_number }} in ${branch_name}}"
