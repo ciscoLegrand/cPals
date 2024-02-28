@@ -1,7 +1,8 @@
 default: &default
   host: <%= `ip route | awk '/default/ { print $3 }'`.strip %>
-  username: <%= Rails.application.credentials.dig(:dbuser) %>
-  password: <%= Rails.application.credentials.dig(:dbpassword) %>
+  port: 5433
+  username: <%= Rails.application.credentials.dig(:database, :user) %>
+  password: <%= Rails.application.credentials.dig(:database, :password) %>
   adapter: postgresql
   encoding: unicode
   # For details on connection pooling, see Rails configuration guide
@@ -10,16 +11,9 @@ default: &default
 
 development:
   <<: *default
-  database: <%= Rails.application.credentials.dig(:dbname) %>_development
+  database: cpals_development
 
 test:
   <<: *default
-  database: <%= Rails.application.credentials.dig(:dbname) %>_test
+  database: cpals_test
 
-staging:
-  <<: *default
-  database: <%= Rails.application.credentials.dig(:dbname) %>_staging
-
-production:
-  <<: *default
-  database: <%= Rails.application.credentials.dig(:dbname) %>_production
