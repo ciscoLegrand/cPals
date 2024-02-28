@@ -6,7 +6,7 @@ module OpenAI
       # uri_base = "http://172.22.112.1:1234" # local environment
 
       OpenAI::Client.new(
-        access_token: Rails.application.credentials.openai_api_key,
+        access_token: Rails.application.credentials.OPENAI_API_KEY,
         # uri_base: uri_base,
         **options
       )
