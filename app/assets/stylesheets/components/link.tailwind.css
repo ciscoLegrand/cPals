@@ -1,0 +1,8 @@
+@layer components {
+  .nav-link {
+    @apply w-full font-semibold transition-colors text-xl rounded-lg text-slate-200 py-2 duration-300 hover:duration-300 hover:bg-slate-100 hover:text-slate-800 whitespace-nowrap;
+  }
+  .nav-link-active {
+    @apply bg-slate-200 text-slate-800 rounded-lg p-2;
+  }
+}

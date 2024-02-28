@@ -1,0 +1,41 @@
+
+<% if user_signed_in? %>
+  <div class="flex flex-col justify-center items-center h-custom">
+    <div class="flex flex-col justify-center items-center gap-4">
+      <h1 class="text-4xl font-bold text-gray-300 flex items-center gap-4">Welcome to
+          <%= link_to root_path, class: 'flex justify-start items-center' do %>
+            <span class="self-center text-3xl font-semibold whitespace-nowrap text-slate-400">c</span>
+            <span class="self-center text-blue-500 text-4xl font-semibold">Legrand</span>
+            <span class="self-center text-indigo-500 text-7xl font-extrabold">web</span> 
+          <% end %>
+      </h1>
+      <p class="text-xl text-gray-300">Estas autenticado</p>
+    </div>
+    <div class="flex flex-col justify-center items-center gap-4">
+      <div class="w-full flex justify-end items-center gap-8">
+        <span class="px-4 py-1 text-xl text-center text-gray-300 font-bold"><%= current_user.email %></span>
+        <%= link_to 'logout', destroy_user_session_path, data: { turbo: '_top' }, class: 'px-4 py-2 font-semibold bg-green-900 hover:bg-green-950 text-green-200 rounded-xl'%>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="flex flex-col justify-center items-center h-custom">
+    <div class="flex flex-col justify-center items-center gap-4">
+      <h1 class="text-4xl font-bold text-gray-300 flex  items-center gap-4">Welcome to 
+        <%= link_to root_path, class: 'flex justify-start items-center' do %>
+          <span class="self-center text-3xl font-semibold whitespace-nowrap text-slate-400">c</span>
+          <span class="self-center text-blue-500 text-4xl font-semibold">Legrand</span>
+          <span class="self-center text-indigo-500 text-7xl font-extrabold">web</span> 
+        <% end %>
+        </h1>
+      <p class="text-xl text-gray-300">Please sign in to continue</p>
+    </div>
+    <div class="flex flex-col justify-center items-center gap-4">
+      <div class="w-full flex justify-end items-center gap-8">
+        <%= link_to 'signup', new_user_registration_path, data: { turbo: '_top' }, class: 'px-4 py-2 font-semibold bg-blue-900 hover:bg-blue-950 text-blue-200 rounded-xl'%>
+        <%= link_to 'login', new_user_session_path, data: { turbo: '_top' }, class: 'px-4 py-2 font-semibold bg-green-900 hover:bg-green-950 text-green-200 rounded-xl'%>
+      </div>
+    </div>
+  </div>
+<% end %>
+

@@ -1,1 +1,31 @@
 /* Application styles */
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #cccccc;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #c5c5c5;
+}
+
+.hljs {
+  background-color: black !important;
+  width: 100%;
+}
+
+.h-custom {
+  height: calc(100vh - 10rem);
+}

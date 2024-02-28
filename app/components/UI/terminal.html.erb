@@ -1,0 +1,32 @@
+<div data-controller="copy" class="w-full flex flex-col border border-transparent rounded-xl overflow-hidden shadow-lg shadow-gray-800 my-8">
+  <div class="w-full px-4 py-2 flex justify-between items-center gap-4 bg-indigo-950">
+    <div class="flex justify-start items-center gap-4">
+      <div class="flex">
+        <span>🔴</span><span>🟡</span><span>🟢</span>
+      </div>
+      <%= content_tag :span, language.presence || 'bash', class: 'text-sm text-indigo-950 font-semibold px-4 py-1 bg-indigo-400 rounded-xl' %>
+    </div>
+    <div class="flex justify-end items-center gap-6">
+      <span class="hidden bg-green-200 rounded-xl px-4 py-1 text-sm" data-copy-target="message"></span>
+      <span data-action="click->copy#copy"
+            class="border border-gray-700 bg-gray-500 p-2 flex justify-center items-center rounded-full hover:cursor-pointer hover:bg-gray-700">
+        <%= inline_svg_tag('icons/terminal/copy.svg', class: 'w-5 h-5 fill-2 stroke-2 stroke-gray-900') %>
+      </span>
+    </div>
+  </div>
+  
+  <% if @code.present? %>
+    <pre data-controller="highlight" class="px-8 py-4 bg-black text-white">
+      <code class="language-<%= language %>" data-copy-target="source">
+        <%= @code.html_safe %>
+      </code>
+    </pre>
+  <% else %>
+    <style>
+      pre code.hljs { display: flex; gap: .5rem; overflow-x: auto; padding: 0; }
+    </style>
+    <pre data-controller="highlight" class="px-8 py-4 bg-black text-white flex whitespace-pre-wrap">
+      $ <code class="language-bash" data-copy-target="source" data-rails-command-target="output"></code>
+    </pre>
+  <% end %>
+</div>

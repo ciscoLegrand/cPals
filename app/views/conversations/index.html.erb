@@ -1,14 +1,17 @@
-<div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-  <% end %>
+<%= turbo_frame_tag @turbo_frame_title do %>
+  <ul class="flex flex-col mb-4 gap-3">
+    <% @conversations.each do |conversation| %>
+      <div class="w-full flex justify-between items-center gap-8">
+        <%= link_to conversation.title.presence || conversation.id, conversation, data: {
+          turbo_frame: '_top',
+        }, class: 'p-2 text-gray-200 rounded-lg hover:bg-gray-700 mx-2 text-sm truncate' %>
+        <%= button_to conversation, method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'h-8 w-8 p-1 border border-slate-400 flex justify-center items-center rounded-full hover:bg-red-300 [&>svg]:hover:stroke-red-500' do %>
+          <%= inline_svg_tag('icons/form/trash-x.svg', class: 'size-6 stroke-slate-400')%>
+        <% end %>
+      </div>
+    <% end %>
+  </ul>
+<% end %>
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Conversations</h1>
-    <%= link_to "New conversation", new_conversation_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
-  </div>
 
-  <div id="conversations" class="min-w-full">
-    <%= render @conversations %>
-  </div>
-</div>
+

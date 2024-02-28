@@ -8,12 +8,20 @@
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+
+
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="bg-gray-800">
+    <div class="w-full" data-controller="dropdown">
+      
+      <%= render 'layouts/shared/notification' %>
+      <%= render 'layouts/shared/navbar' %>
       <%= yield %>
-    </main>
+    </div>
   </body>
 </html>

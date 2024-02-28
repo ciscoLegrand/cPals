@@ -1,37 +1,39 @@
-<div id="<%= dom_id interaction %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Conversation:</strong>
-    <%= interaction.conversation_id %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Question text:</strong>
-    <%= interaction.question_text %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Answer text:</strong>
-    <%= interaction.answer_text %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Response metadata:</strong>
-    <%= interaction.response_metadata %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Model used:</strong>
-    <%= interaction.model_used %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Prompt settings:</strong>
-    <%= interaction.prompt_settings %>
-  </p>
-
-  <% if action_name != "show" %>
-    <%= link_to "Show this interaction", interaction, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Edit this interaction", edit_interaction_path(interaction), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-    <hr class="mt-6">
+<div id="<%= dom_id(interaction) %>">
+  <% if interaction.user? %>
+    <div class="w-full bg-green-200 shadow-lg shadow-green-900 text-green-800 px-6 py-3 rounded-xl mt-4">
+      <div class="w-full flex justify-between items-center gap-8 mb-4">
+        <div class="flex items-center gap-8">
+          <span class="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full text-sm border border-amber-400 bg-amber-600 text-amber-200">c</span>
+          <span class="flex font-bold text-sm">YOU</span>
+        </div>
+        <span class="px-3 py-1 bg-red-300 text-red-800"><%= interaction.id %></span>
+        <time><%= time_ago_in_words(interaction.created_at) %></time>
+      </div>
+      <%= interaction.content %>
+    </div>
+  <% else %>
+    <div class="w-full px-6 py-3 rounded-xl my-4 text-gray-400" data-controller="copy">
+      <div class="w-full flex justify-between items-center gap-8 mb-4 px-4 py-1 text-gray-300">
+        <div class="flex justify-start items-center gap-6">
+          <%= inline_svg_tag('icons/terminal/chat-gpt.svg', class: 'w-6 h-6 flex items-center justify-center overflow-hidden text-sm bg-gray-300 text-gray-900 p-1 rounded-full')%>
+          <span class="flex font-bold text-sm"><%= interaction.conversation.model %></span>
+        </div>
+        <div class="flex justify-end items-center gap-6">
+          <time><%= time_ago_in_words(interaction.created_at) %></time>
+          <div class="flex justify-end items-center gap-6">
+            <span class="hidden bg-green-200 rounded-xl px-4 py-1 text-sm" data-copy-target="message"></span>
+            <span data-action="click->copy#copy"
+                  class="border border-gray-700 bg-gray-500 p-2 flex justify-center items-center rounded-full hover:cursor-pointer hover:bg-gray-700">
+              <%= inline_svg_tag('icons/terminal/copy.svg', class: 'w-5 h-5 fill-2 stroke-2 stroke-gray-900') %>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div data-copy-target="source">
+        <%= interaction.answer_text_to_html(self) %>
+      </div>
+    </div>
   <% end %>
 </div>
+
+
