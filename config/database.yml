@@ -1,5 +1,5 @@
 default: &default
-  host: <%= `ip route | awk '/default/ { print $3 }'`.strip %>
+  host: localhost #<%= `ip route | awk '/default/ { print $3 }'`.strip %>
   port: 5433
   username: <%= Rails.application.credentials.dig(:database, :user) %>
   password: <%= Rails.application.credentials.dig(:database, :password) %>
