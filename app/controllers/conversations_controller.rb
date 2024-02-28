@@ -5,7 +5,7 @@ class ConversationsController < ApplicationController
 
   # GET /conversations
   def index
-    valid_ranges = %w[today yesterday last_7_days last_30_days].freeze
+    valid_ranges = %w[today yesterday last_7_days last_30_days older].freeze
     range = valid_ranges.include?(params[:range]) ? params[:range] : 'all'
     @conversations = Conversation.send(range).order(created_at: :desc)
     @turbo_frame_title = "conversations_#{range}"

@@ -3,8 +3,11 @@
 module OpenAI
   module ClientInitializer
     def setup_client(options = {})
+      # uri_base = "http://172.22.112.1:1234" # local environment
+
       OpenAI::Client.new(
         access_token: Rails.application.credentials.openai_api_key,
+        # uri_base: uri_base,
         **options
       )
     end
@@ -13,7 +16,7 @@ module OpenAI
   class BaseService
     include ClientInitializer
 
-    DEFAULT_MODEL = "gpt-3.5-turbo"
+    DEFAULT_MODEL = 'gpt-3.5-turbo'
     DEFAULT_MAX_TOKENS = 750
     DEFAULT_TEMPERATURE = 0.8
     RESPONSES_PER_MESSAGE = 1
